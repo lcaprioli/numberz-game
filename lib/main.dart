@@ -94,15 +94,6 @@ class Tile {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -113,7 +104,9 @@ class _MyHomePageState extends State<MyHomePage> {
   static const _width = 5;
   static const _height = 7;
   List<Tile> _tiles = [];
-  int _lastSpawn = Random().nextInt(11);
+  Set<int> _selectedTiles = {};
+  int _lastSpawn = Random().nextInt(6);
+  int _score = 0;
   Timer? _refresh;
 
   @override
@@ -122,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _width * _height,
       (index) => Tile(
         key: GlobalKey(),
-        number: Random().nextInt(11),
+        number: Random().nextInt(6),
       ),
     );
     setInitial();
@@ -151,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if (_tiles[i].disposed) {
             _tiles[i] = _tiles[i].setNumber(_spawnReplacement());
             _tiles[i] = _tiles[i].unDispose();
-            /*  _tiles[i] = Tile(key: GlobalKey(), number: Random().nextInt(11)); */
+            /*  _tiles[i] = Tile(key: GlobalKey(), number: Random().nextInt(6)); */
           }
         }
       }
@@ -162,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_combinationCount() < 3) {
       return _lastSpawn;
     }
-    _lastSpawn = Random().nextInt(11);
+    _lastSpawn = Random().nextInt(6);
     return _lastSpawn;
   }
 
@@ -201,36 +194,72 @@ class _MyHomePageState extends State<MyHomePage> {
             Offset localRed = box.globalToLocal(a.position);
             if (box.hitTest(result, position: localRed)) {
               _tiles[i] = _tiles[i].hit();
+              _selectedTiles.add(i);
             }
           }
         },
         onPointerUp: (a) {
-          final _selectedTiles = <Tile>[];
-          for (var i = 0; i < _width * _height; i++) {
-            if (_tiles[i].hasHit) {
-              _selectedTiles.add(_tiles[i]);
+          var sequence = true;
+          var sequenceInverse = true;
+          var match = true;
+          for (var i = 0; i < _selectedTiles.length - 1; i++) {
+            var num = _tiles[_selectedTiles.elementAt(i)].number;
+            var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
+
+            if (num != next + 1) {
+              sequence = false;
             }
           }
-          var match = true;
-          _selectedTiles.sort((a, b) => a.number.compareTo(b.number));
           for (var i = 0; i < _selectedTiles.length - 1; i++) {
-            var num = _selectedTiles[i].number;
-            var next = _selectedTiles[i + 1].number;
+            var num = _tiles[_selectedTiles.elementAt(i)].number;
+            var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
 
-            if ((num + 1) != next) {
-              if (_selectedTiles[i].number != _selectedTiles[i + 1].number) {
+            if (num != next - 1) {
+              sequenceInverse = false;
+            }
+          }
+          if (!sequence && !sequenceInverse) {
+            for (var i = 0; i < _selectedTiles.length - 1; i++) {
+              var num = _tiles[_selectedTiles.elementAt(i)].number;
+              var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
+
+              if (num != next) {
                 match = false;
               }
             }
+          } else {
+            match = false;
           }
 
-          print('match $match');
-
-          if (match) {
-            for (var i = 0; i < _width * _height; i++) {
-              if (_tiles[i].hasHit) _tiles[i] = _tiles[i].dispose();
+          if (match || sequence || sequenceInverse) {
+            for (var i = 0; i < _selectedTiles.length; i++) {
+              _tiles[_selectedTiles.elementAt(i)] = _tiles[_selectedTiles.elementAt(i)].dispose();
             }
-          } else {}
+          }
+          _selectedTiles = {};
+          /*  if ((num + 1) == next) {
+              match = true;
+              sequence = true;
+              if (sequence) print('sequencia');
+            } else if (_tiles[i].number == _tiles[i + 1].number && !sequence) {
+              match = true;
+            }
+            if (match) _tiles[i] = _tiles[i].dispose(); */ /*  if ((num + 1) == next) {
+              match = true;
+              sequence = true;
+              if (sequence) print('sequencia');
+            } else if (_tiles[i].number == _tiles[i + 1].number && !sequence) {
+              match = true;
+            }
+            if (match) _tiles[i] = _tiles[i].dispose(); */
+          /* 
+          _selectedTiles.sort((a, b) => a.number.compareTo(b.number));
+          for (var i = 0; i < _selectedTiles.length - 1; i++) {
+            if (!match) _tiles[i] = _tiles[i].unHit();
+          }
+          for (var i = 0; i < _width * _height; i++) {
+            if (_tiles[i].hasHit) _tiles[i] = _tiles[i].dispose();
+          } */
           for (var i = 0; i < _width * _height; i++) {
             _tiles[i] = _tiles[i].unHit();
           }
