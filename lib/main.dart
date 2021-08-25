@@ -103,9 +103,18 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   static const _width = 5;
   static const _height = 7;
+
+  static Set<Color> _tileColors = {
+    Color(0xfffede5f),
+    Color(0xffd64915),
+    Color(0xffe36825),
+    Color(0xffb88251),
+    Color(0xff927777),
+  };
+  static Set<Color> _textColors = {Colors.amber};
   List<Tile> _tiles = [];
   Set<int> _selectedTiles = {};
-  int _lastSpawn = Random().nextInt(6);
+  int _lastSpawn = Random().nextInt(5) + 1;
   int _score = 0;
   Timer? _refresh;
 
@@ -115,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _width * _height,
       (index) => Tile(
         key: GlobalKey(),
-        number: Random().nextInt(6),
+        number: Random().nextInt(5) + 1,
       ),
     );
     setInitial();
@@ -155,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_combinationCount() < 3) {
       return _lastSpawn;
     }
-    _lastSpawn = Random().nextInt(6);
+    _lastSpawn = Random().nextInt(5) + 1;
     return _lastSpawn;
   }
 
@@ -184,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
     print(_combinationCount());
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Score: $_score'),
       ),
       body: Listener(
         onPointerMove: (a) {
@@ -199,67 +208,51 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         },
         onPointerUp: (a) {
-          var sequence = true;
-          var sequenceInverse = true;
-          var match = true;
-          for (var i = 0; i < _selectedTiles.length - 1; i++) {
-            var num = _tiles[_selectedTiles.elementAt(i)].number;
-            var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
-
-            if (num != next + 1) {
-              sequence = false;
-            }
-          }
-          for (var i = 0; i < _selectedTiles.length - 1; i++) {
-            var num = _tiles[_selectedTiles.elementAt(i)].number;
-            var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
-
-            if (num != next - 1) {
-              sequenceInverse = false;
-            }
-          }
-          if (!sequence && !sequenceInverse) {
+          if (_selectedTiles.length > 1) {
+            var sequence = true;
+            var sequenceInverse = true;
+            var match = true;
             for (var i = 0; i < _selectedTiles.length - 1; i++) {
               var num = _tiles[_selectedTiles.elementAt(i)].number;
               var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
 
-              if (num != next) {
-                match = false;
+              if (num != next + 1) {
+                sequence = false;
               }
             }
-          } else {
-            match = false;
-          }
+            for (var i = 0; i < _selectedTiles.length - 1; i++) {
+              var num = _tiles[_selectedTiles.elementAt(i)].number;
+              var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
 
-          if (match || sequence || sequenceInverse) {
-            for (var i = 0; i < _selectedTiles.length; i++) {
-              _tiles[_selectedTiles.elementAt(i)] = _tiles[_selectedTiles.elementAt(i)].dispose();
+              if (num != next - 1) {
+                sequenceInverse = false;
+              }
+            }
+            if (!sequence && !sequenceInverse) {
+              for (var i = 0; i < _selectedTiles.length - 1; i++) {
+                var num = _tiles[_selectedTiles.elementAt(i)].number;
+                var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
+
+                if (num != next) {
+                  match = false;
+                }
+              }
+            } else {
+              match = false;
+            }
+
+            if (match || sequence || sequenceInverse) {
+              for (var i = 0; i < _selectedTiles.length; i++) {
+                _tiles[_selectedTiles.elementAt(i)] = _tiles[_selectedTiles.elementAt(i)].dispose();
+              }
+            }
+            if (match) {
+              _score += (10 * _selectedTiles.length);
+            } else if (sequence || sequenceInverse) {
+              _score += (50 * _selectedTiles.length);
             }
           }
           _selectedTiles = {};
-          /*  if ((num + 1) == next) {
-              match = true;
-              sequence = true;
-              if (sequence) print('sequencia');
-            } else if (_tiles[i].number == _tiles[i + 1].number && !sequence) {
-              match = true;
-            }
-            if (match) _tiles[i] = _tiles[i].dispose(); */ /*  if ((num + 1) == next) {
-              match = true;
-              sequence = true;
-              if (sequence) print('sequencia');
-            } else if (_tiles[i].number == _tiles[i + 1].number && !sequence) {
-              match = true;
-            }
-            if (match) _tiles[i] = _tiles[i].dispose(); */
-          /* 
-          _selectedTiles.sort((a, b) => a.number.compareTo(b.number));
-          for (var i = 0; i < _selectedTiles.length - 1; i++) {
-            if (!match) _tiles[i] = _tiles[i].unHit();
-          }
-          for (var i = 0; i < _width * _height; i++) {
-            if (_tiles[i].hasHit) _tiles[i] = _tiles[i].dispose();
-          } */
           for (var i = 0; i < _width * _height; i++) {
             _tiles[i] = _tiles[i].unHit();
           }
@@ -275,10 +268,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 margin: EdgeInsets.all(5),
                 decoration: BoxDecoration(
                   color: _tiles[index].hasHit
-                      ? Colors.pink
-                      : Colors.black.withOpacity(_tiles[index].number / 30),
+                      ? Colors.black
+                      : _tileColors.elementAt(_tiles[index].number - 1),
                   borderRadius: BorderRadius.circular(45),
-                  border: Border.all(color: Colors.grey),
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 3,
+                  ),
                 ),
                 key: _tiles[index].key,
                 duration: Duration(milliseconds: 250),
@@ -287,8 +283,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Center(
                     child: Text(
                       '${_tiles[index].disposed ? '' : _tiles[index].number}',
-                      style:
-                          Theme.of(context).textTheme.bodyText2?.copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: _tiles[index].hasHit ? Colors.white : Colors.black),
                     ),
                   ),
                 ),
