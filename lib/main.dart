@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
+      debugShowCheckedModeBanner: false,
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -38,12 +39,14 @@ class Tile {
     required this.number,
     this.hasHit = false,
     this.disposed = false,
+    this.burned = false,
   });
 
   final GlobalKey key;
   final int number;
   final bool hasHit;
   final bool disposed;
+  final bool burned;
 
   Tile hit() {
     return Tile(
@@ -51,6 +54,7 @@ class Tile {
       number: number,
       hasHit: true,
       disposed: disposed,
+      burned: burned,
     );
   }
 
@@ -60,6 +64,7 @@ class Tile {
       number: newNumber,
       hasHit: hasHit,
       disposed: disposed,
+      burned: burned,
     );
   }
 
@@ -69,6 +74,7 @@ class Tile {
       number: number,
       hasHit: false,
       disposed: disposed,
+      burned: burned,
     );
   }
 
@@ -78,6 +84,7 @@ class Tile {
       number: number,
       hasHit: hasHit,
       disposed: true,
+      burned: burned,
     );
   }
 
@@ -87,6 +94,17 @@ class Tile {
       number: number,
       hasHit: hasHit,
       disposed: false,
+      burned: false,
+    );
+  }
+
+  Tile burn() {
+    return Tile(
+      key: key,
+      number: number,
+      hasHit: hasHit,
+      disposed: disposed,
+      burned: true,
     );
   }
 }
@@ -111,12 +129,14 @@ class _MyHomePageState extends State<MyHomePage> {
     Color(0xffb88251),
     Color(0xff927777),
   };
-  static Set<Color> _textColors = {Colors.amber};
+
   List<Tile> _tiles = [];
   Set<int> _selectedTiles = {};
   int _lastSpawn = Random().nextInt(5) + 1;
   int _score = 0;
   Timer? _refresh;
+  int _seconds = 20;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -129,7 +149,33 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     setInitial();
     _refresh = Timer.periodic(Duration(milliseconds: 150), moveDown);
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_seconds == 0) {
+          _decrease();
+          _seconds = 20;
+        } else {
+          _seconds = _seconds - 1;
+        }
+      });
+    });
     super.initState();
+  }
+
+  void _decrease() async {
+    for (var i = 0; i < _width * _height; i++) {
+      if (_tiles[i].number > 1) {
+        _tiles[i] = _tiles[i].setNumber(_tiles[i].number - 1);
+      } else {
+        _tiles[i] = _tiles[i].burn();
+      }
+    }
+    await Future.delayed(Duration(seconds: 1));
+    for (var i = 0; i < _width * _height; i++) {
+      if (_tiles[i].burned) {
+        _tiles[i] = _tiles[i].dispose();
+      }
+    }
   }
 
   void setInitial() {
@@ -193,7 +239,13 @@ class _MyHomePageState extends State<MyHomePage> {
     print(_combinationCount());
     return Scaffold(
       appBar: AppBar(
-        title: Text('Score: $_score'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Score: $_score'),
+            Text('Timer: $_seconds'),
+          ],
+        ),
       ),
       body: Listener(
         onPointerMove: (a) {
@@ -269,7 +321,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: BoxDecoration(
                   color: _tiles[index].hasHit
                       ? Colors.black
-                      : _tileColors.elementAt(_tiles[index].number - 1),
+                      : _tiles[index].burned
+                          ? Colors.black
+                          : _tileColors.elementAt(_tiles[index].number - 1),
                   borderRadius: BorderRadius.circular(45),
                   border: Border.all(
                     color: Colors.black,
