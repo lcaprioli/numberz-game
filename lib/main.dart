@@ -164,9 +164,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _decrease() async {
     for (var i = 0; i < _width * _height; i++) {
-      if (_tiles[i].number > 1) {
-        _tiles[i] = _tiles[i].setNumber(_tiles[i].number - 1);
+      if (_tiles[i].number < 5) {
+        _tiles[i] = _tiles[i].setNumber(_tiles[i].number + 1);
       } else {
+        _score = _score - 10;
         _tiles[i] = _tiles[i].burn();
       }
     }
@@ -239,6 +240,7 @@ class _MyHomePageState extends State<MyHomePage> {
     print(_combinationCount());
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 60,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -247,108 +249,145 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: Listener(
-        onPointerMove: (a) {
-          for (var i = 0; i < _width * _height; i++) {
-            final box = _tiles[i].key.currentContext?.findRenderObject() as RenderBox;
-            final result = BoxHitTestResult();
-            Offset localRed = box.globalToLocal(a.position);
-            if (box.hitTest(result, position: localRed)) {
-              _tiles[i] = _tiles[i].hit();
-              _selectedTiles.add(i);
-            }
-          }
-        },
-        onPointerUp: (a) {
-          if (_selectedTiles.length > 1) {
-            var sequence = true;
-            var sequenceInverse = true;
-            var match = true;
-            for (var i = 0; i < _selectedTiles.length - 1; i++) {
-              var num = _tiles[_selectedTiles.elementAt(i)].number;
-              var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
-
-              if (num != next + 1) {
-                sequence = false;
-              }
-            }
-            for (var i = 0; i < _selectedTiles.length - 1; i++) {
-              var num = _tiles[_selectedTiles.elementAt(i)].number;
-              var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
-
-              if (num != next - 1) {
-                sequenceInverse = false;
-              }
-            }
-            if (!sequence && !sequenceInverse) {
-              for (var i = 0; i < _selectedTiles.length - 1; i++) {
-                var num = _tiles[_selectedTiles.elementAt(i)].number;
-                var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
-
-                if (num != next) {
-                  match = false;
-                }
-              }
-            } else {
-              match = false;
-            }
-
-            if (match || sequence || sequenceInverse) {
-              for (var i = 0; i < _selectedTiles.length; i++) {
-                _tiles[_selectedTiles.elementAt(i)] = _tiles[_selectedTiles.elementAt(i)].dispose();
-              }
-            }
-            if (match) {
-              _score += (10 * _selectedTiles.length);
-            } else if (sequence || sequenceInverse) {
-              _score += (50 * _selectedTiles.length);
-            }
-          }
-          _selectedTiles = {};
-          for (var i = 0; i < _width * _height; i++) {
-            _tiles[i] = _tiles[i].unHit();
-          }
-        },
-        child: Container(
-          width: 400,
-          height: 750,
-          child: GridView.count(
-            shrinkWrap: true,
-            crossAxisCount: _width,
-            children: List.generate(_width * _height, (index) {
-              return AnimatedContainer(
-                margin: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: _tiles[index].hasHit
-                      ? Colors.black
-                      : _tiles[index].burned
-                          ? Colors.black
-                          : _tileColors.elementAt(_tiles[index].number - 1),
-                  borderRadius: BorderRadius.circular(45),
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 3,
+      body: Container(
+        height: MediaQuery.of(context).size.height - 60,
+        child: Row(
+          children: [
+            Listener(
+              onPointerMove: pointerDown,
+              onPointerUp: pointerUp,
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: 400),
+                  child: GridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: _width,
+                    children: List.generate(_width * _height, (index) {
+                      return _buildTile(index, context);
+                    }),
                   ),
                 ),
-                key: _tiles[index].key,
-                duration: Duration(milliseconds: 250),
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  child: Center(
-                    child: Text(
-                      '${_tiles[index].disposed ? '' : _tiles[index].number}',
-                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: _tiles[index].hasHit ? Colors.white : Colors.black),
-                    ),
-                  ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Container(
+                width: 20,
+                height: MediaQuery.of(context).size.height - 60,
+                color: Colors.brown,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 0,
+                      width: 20,
+                      height: ((MediaQuery.of(context).size.height - 60) / 100) * (_seconds / 20) * 100,
+                      child: Container(
+                        color: Colors.red,
+                      ),
+                    )
+                  ],
                 ),
-              );
-            }),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  AnimatedContainer _buildTile(int index, BuildContext context) {
+    return AnimatedContainer(
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: _tiles[index].hasHit
+            ? Colors.black
+            : _tiles[index].burned
+                ? Colors.black
+                : _tileColors.elementAt(_tiles[index].number - 1),
+        borderRadius: BorderRadius.circular(45),
+        border: Border.all(
+          color: Colors.black,
+          width: 3,
+        ),
+      ),
+      key: _tiles[index].key,
+      duration: Duration(milliseconds: 250),
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        child: Center(
+          child: Text(
+            '${_tiles[index].disposed ? '' : _tiles[index].number}',
+            style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: _tiles[index].hasHit ? Colors.white : Colors.black),
           ),
         ),
       ),
     );
+  }
+
+  void pointerDown(PointerMoveEvent event) {
+    for (var i = 0; i < _width * _height; i++) {
+      final box = _tiles[i].key.currentContext?.findRenderObject() as RenderBox;
+      final result = BoxHitTestResult();
+      Offset localRed = box.globalToLocal(event.position);
+      if (box.hitTest(result, position: localRed)) {
+        _tiles[i] = _tiles[i].hit();
+        _selectedTiles.add(i);
+      }
+    }
+  }
+
+  void pointerUp(PointerUpEvent event) {
+    if (_selectedTiles.length > 1) {
+      var sequence = true;
+      var sequenceInverse = true;
+      var match = true;
+      for (var i = 0; i < _selectedTiles.length - 1; i++) {
+        var num = _tiles[_selectedTiles.elementAt(i)].number;
+        var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
+
+        if (num != next + 1) {
+          sequence = false;
+        }
+      }
+      for (var i = 0; i < _selectedTiles.length - 1; i++) {
+        var num = _tiles[_selectedTiles.elementAt(i)].number;
+        var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
+
+        if (num != next - 1) {
+          sequenceInverse = false;
+        }
+      }
+      if (!sequence && !sequenceInverse) {
+        for (var i = 0; i < _selectedTiles.length - 1; i++) {
+          var num = _tiles[_selectedTiles.elementAt(i)].number;
+          var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
+
+          if (num != next) {
+            match = false;
+          }
+        }
+      } else {
+        match = false;
+      }
+
+      if (match || sequence || sequenceInverse) {
+        for (var i = 0; i < _selectedTiles.length; i++) {
+          _tiles[_selectedTiles.elementAt(i)] = _tiles[_selectedTiles.elementAt(i)].dispose();
+        }
+      }
+      if (match) {
+        _score += (10 * _selectedTiles.length);
+      } else if (sequence || sequenceInverse) {
+        _score += (50 * _selectedTiles.length);
+      }
+    }
+    _selectedTiles = {};
+    for (var i = 0; i < _width * _height; i++) {
+      _tiles[i] = _tiles[i].unHit();
+    }
   }
 }
