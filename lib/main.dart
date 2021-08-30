@@ -4,6 +4,10 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:numbers/board/board_controller.dart';
+import 'package:numbers/board/board_functions.dart';
+
+import 'board/board_consts.dart';
 
 void main() {
   runApp(MyApp());
@@ -119,159 +123,74 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static const _width = 5;
-  static const _height = 7;
-
-  static Set<Color> _tileColors = {
-    Color(0xfffede5f),
-    Color(0xffd64915),
-    Color(0xffe36825),
-    Color(0xffb88251),
-    Color(0xff927777),
-  };
-
-  List<Tile> _tiles = [];
-  Set<int> _selectedTiles = {};
-  int _lastSpawn = Random().nextInt(5) + 1;
-  int _score = 0;
   Timer? _refresh;
-  int _seconds = 20;
   Timer? _timer;
+  late BoardFunctions functions;
+  final controller = BoardController();
 
   @override
   void initState() {
-    _tiles = List.generate(
-      _width * _height,
+    functions = BoardFunctions(controller);
+    controller.tiles = List.generate(
+      BoardConsts.width * BoardConsts.height,
       (index) => Tile(
         key: GlobalKey(),
         number: Random().nextInt(5) + 1,
       ),
     );
-    setInitial();
-    _refresh = Timer.periodic(Duration(milliseconds: 150), moveDown);
+    functions.setInitial();
+    _refresh = Timer.periodic(Duration(milliseconds: 150), (t) {
+      setState(() {
+        functions.moveDown(t);
+      });
+    });
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
-        if (_seconds == 0) {
-          _decrease();
-          _seconds = 20;
+        if (controller.seconds == 0) {
+          functions.decrease();
+          controller.seconds = 20;
         } else {
-          _seconds = _seconds - 1;
+          controller.seconds = controller.seconds - 1;
         }
       });
     });
     super.initState();
   }
 
-  void _decrease() async {
-    for (var i = 0; i < _width * _height; i++) {
-      if (_tiles[i].number < 5) {
-        _tiles[i] = _tiles[i].setNumber(_tiles[i].number + 1);
-      } else {
-        _score = _score - 10;
-        _tiles[i] = _tiles[i].burn();
-      }
-    }
-    await Future.delayed(Duration(seconds: 1));
-    for (var i = 0; i < _width * _height; i++) {
-      if (_tiles[i].burned) {
-        _tiles[i] = _tiles[i].dispose();
-      }
-    }
-  }
-
-  void setInitial() {
-    for (var i = 0; i < _width * _height; i++) {
-      _tiles[i] = _tiles[i].setNumber(_spawnReplacement());
-    }
-  }
-
-  void moveDown(Timer t) {
-    setState(() {
-      for (var i = 0; i < _width * _height; i++) {
-        if (i > _width - 1) {
-          if (_tiles[i].disposed) {
-            _tiles[i] = _tiles[i].setNumber(_tiles[i - _width].number);
-            _tiles[i] = _tiles[i].unDispose();
-            _tiles[i - _width] = _tiles[i - _width].dispose();
-            /*     _tiles[i] = _tiles[i - _width];
-            _tiles[i - _width] = _tiles[i - _width].dispose(); */
-          }
-        } else {
-          if (_tiles[i].disposed) {
-            _tiles[i] = _tiles[i].setNumber(_spawnReplacement());
-            _tiles[i] = _tiles[i].unDispose();
-            /*  _tiles[i] = Tile(key: GlobalKey(), number: Random().nextInt(6)); */
-          }
-        }
-      }
-    });
-  }
-
-  int _spawnReplacement() {
-    if (_combinationCount() < 3) {
-      return _lastSpawn;
-    }
-    _lastSpawn = Random().nextInt(5) + 1;
-    return _lastSpawn;
-  }
-
-  int _combinationCount() {
-    int _matchCount = 0;
-    for (var i = 0; i < _width; i++) {
-      for (var a = 0; a < _height - 1; a++) {
-        if (_tiles[(i * _width) + a].number == _tiles[((i + 1) * _width) + a].number) {
-          _matchCount++;
-        }
-      }
-    }
-    for (var i = 0; i < _height; i++) {
-      for (var a = 0; a < _width - 2; a++) {
-        if (_tiles[(i * _width) + a].number == _tiles[((i * _width) + a) + 1].number) {
-          _matchCount++;
-        }
-      }
-    }
-
-    return _matchCount;
-  }
-
   @override
   Widget build(BuildContext context) {
-    print(_combinationCount());
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 60,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Score: $_score'),
-            Text('Timer: $_seconds'),
+            Text('Score: ${controller.score}'),
+            Text('Timer: ${controller.seconds}'),
           ],
         ),
       ),
       body: Container(
-        height: MediaQuery.of(context).size.height - 60,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Listener(
-              onPointerMove: pointerDown,
-              onPointerUp: pointerUp,
-              child: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Container(
-                  constraints: BoxConstraints(maxWidth: 400),
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    crossAxisCount: _width,
-                    children: List.generate(_width * _height, (index) {
-                      return _buildTile(index, context);
-                    }),
-                  ),
+              onPointerMove: functions.pointerDown,
+              onPointerUp: functions.pointerUp,
+              child: Container(
+                padding: EdgeInsets.all(15),
+                constraints: BoxConstraints(maxWidth: 325),
+                child: GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: BoardConsts.width,
+                  children: List.generate(BoardConsts.width * BoardConsts.height, (index) {
+                    return _buildTile(index, context);
+                  }),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
+            Align(
+              alignment: Alignment.centerRight,
               child: Container(
                 width: 20,
                 height: MediaQuery.of(context).size.height - 60,
@@ -281,7 +200,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     Positioned(
                       top: 0,
                       width: 20,
-                      height: ((MediaQuery.of(context).size.height - 60) / 100) * (_seconds / 20) * 100,
+                      height: ((MediaQuery.of(context).size.height - 60) / 100) *
+                          (controller.seconds / 20) *
+                          100,
                       child: Container(
                         color: Colors.red,
                       ),
@@ -300,94 +221,31 @@ class _MyHomePageState extends State<MyHomePage> {
     return AnimatedContainer(
       margin: EdgeInsets.all(5),
       decoration: BoxDecoration(
-        color: _tiles[index].hasHit
+        color: controller.tiles[index].hasHit
             ? Colors.black
-            : _tiles[index].burned
+            : controller.tiles[index].burned
                 ? Colors.black
-                : _tileColors.elementAt(_tiles[index].number - 1),
+                : BoardConsts.tileColors.elementAt(controller.tiles[index].number - 1),
         borderRadius: BorderRadius.circular(45),
         border: Border.all(
           color: Colors.black,
           width: 3,
         ),
       ),
-      key: _tiles[index].key,
+      key: controller.tiles[index].key,
       duration: Duration(milliseconds: 250),
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         child: Center(
           child: Text(
-            '${_tiles[index].disposed ? '' : _tiles[index].number}',
+            '${controller.tiles[index].disposed ? '' : controller.tiles[index].number}',
             style: Theme.of(context).textTheme.bodyText2?.copyWith(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: _tiles[index].hasHit ? Colors.white : Colors.black),
+                color: controller.tiles[index].hasHit ? Colors.white : Colors.black),
           ),
         ),
       ),
     );
-  }
-
-  void pointerDown(PointerMoveEvent event) {
-    for (var i = 0; i < _width * _height; i++) {
-      final box = _tiles[i].key.currentContext?.findRenderObject() as RenderBox;
-      final result = BoxHitTestResult();
-      Offset localRed = box.globalToLocal(event.position);
-      if (box.hitTest(result, position: localRed)) {
-        _tiles[i] = _tiles[i].hit();
-        _selectedTiles.add(i);
-      }
-    }
-  }
-
-  void pointerUp(PointerUpEvent event) {
-    if (_selectedTiles.length > 1) {
-      var sequence = true;
-      var sequenceInverse = true;
-      var match = true;
-      for (var i = 0; i < _selectedTiles.length - 1; i++) {
-        var num = _tiles[_selectedTiles.elementAt(i)].number;
-        var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
-
-        if (num != next + 1) {
-          sequence = false;
-        }
-      }
-      for (var i = 0; i < _selectedTiles.length - 1; i++) {
-        var num = _tiles[_selectedTiles.elementAt(i)].number;
-        var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
-
-        if (num != next - 1) {
-          sequenceInverse = false;
-        }
-      }
-      if (!sequence && !sequenceInverse) {
-        for (var i = 0; i < _selectedTiles.length - 1; i++) {
-          var num = _tiles[_selectedTiles.elementAt(i)].number;
-          var next = _tiles[_selectedTiles.elementAt(i + 1)].number;
-
-          if (num != next) {
-            match = false;
-          }
-        }
-      } else {
-        match = false;
-      }
-
-      if (match || sequence || sequenceInverse) {
-        for (var i = 0; i < _selectedTiles.length; i++) {
-          _tiles[_selectedTiles.elementAt(i)] = _tiles[_selectedTiles.elementAt(i)].dispose();
-        }
-      }
-      if (match) {
-        _score += (10 * _selectedTiles.length);
-      } else if (sequence || sequenceInverse) {
-        _score += (50 * _selectedTiles.length);
-      }
-    }
-    _selectedTiles = {};
-    for (var i = 0; i < _width * _height; i++) {
-      _tiles[i] = _tiles[i].unHit();
-    }
   }
 }
