@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:numbers/board/board_controller.dart';
 import 'package:numbers/board/board_functions.dart';
+import 'package:numbers/board/board_widgets.dart';
 
 import 'board/board_consts.dart';
+import 'board/board_tile_model.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,82 +34,6 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class Tile {
-  Tile({
-    required this.key,
-    required this.number,
-    this.hasHit = false,
-    this.disposed = false,
-    this.burned = false,
-  });
-
-  final GlobalKey key;
-  final int number;
-  final bool hasHit;
-  final bool disposed;
-  final bool burned;
-
-  Tile hit() {
-    return Tile(
-      key: key,
-      number: number,
-      hasHit: true,
-      disposed: disposed,
-      burned: burned,
-    );
-  }
-
-  Tile setNumber(int newNumber) {
-    return Tile(
-      key: key,
-      number: newNumber,
-      hasHit: hasHit,
-      disposed: disposed,
-      burned: burned,
-    );
-  }
-
-  Tile unHit() {
-    return Tile(
-      key: key,
-      number: number,
-      hasHit: false,
-      disposed: disposed,
-      burned: burned,
-    );
-  }
-
-  Tile dispose() {
-    return Tile(
-      key: key,
-      number: number,
-      hasHit: hasHit,
-      disposed: true,
-      burned: burned,
-    );
-  }
-
-  Tile unDispose() {
-    return Tile(
-      key: key,
-      number: number,
-      hasHit: hasHit,
-      disposed: false,
-      burned: false,
-    );
-  }
-
-  Tile burn() {
-    return Tile(
-      key: key,
-      number: number,
-      hasHit: hasHit,
-      disposed: disposed,
-      burned: true,
     );
   }
 }
@@ -184,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   shrinkWrap: true,
                   crossAxisCount: BoardConsts.width,
                   children: List.generate(BoardConsts.width * BoardConsts.height, (index) {
-                    return _buildTile(index, context);
+                    return BoardWidgets().buildTile(controller.tiles[index], context);
                   }),
                 ),
               ),
@@ -212,38 +137,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             )
           ],
-        ),
-      ),
-    );
-  }
-
-  AnimatedContainer _buildTile(int index, BuildContext context) {
-    return AnimatedContainer(
-      margin: EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        color: controller.tiles[index].hasHit
-            ? Colors.black
-            : controller.tiles[index].burned
-                ? Colors.black
-                : BoardConsts.tileColors.elementAt(controller.tiles[index].number - 1),
-        borderRadius: BorderRadius.circular(45),
-        border: Border.all(
-          color: Colors.black,
-          width: 3,
-        ),
-      ),
-      key: controller.tiles[index].key,
-      duration: Duration(milliseconds: 250),
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        child: Center(
-          child: Text(
-            '${controller.tiles[index].disposed ? '' : controller.tiles[index].number}',
-            style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: controller.tiles[index].hasHit ? Colors.white : Colors.black),
-          ),
         ),
       ),
     );

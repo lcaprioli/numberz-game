@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import '../main.dart';
+import 'board_tile_model.dart';
 
 class BoardController {
   List<Tile> tiles = [];
