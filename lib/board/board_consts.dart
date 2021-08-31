@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class BoardConsts{
-  static const width = 5;
-  static const height = 9;
+class BoardConsts {
+  static const width = 11;
+  static const height = 5;
 
   static Set<Color> tileColors = {
     Color(0xfffede5f),
@@ -11,6 +11,4 @@ class BoardConsts{
     Color(0xffb88251),
     Color(0xff927777),
   };
-
-
 }

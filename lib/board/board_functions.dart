@@ -48,14 +48,14 @@ class BoardFunctions {
     int _matchCount = 0;
     for (var i = 0; i < BoardConsts.width; i++) {
       for (var a = 0; a < BoardConsts.height - 1; a++) {
-        if (controller.tiles[(i * BoardConsts.width) + a].number ==
-            controller.tiles[((i + 1) * BoardConsts.width) + a].number) {
+        if (controller.tiles[(a * BoardConsts.width) + i].number ==
+            controller.tiles[((a + 1) * BoardConsts.width) + i].number) {
           _matchCount++;
         }
       }
     }
     for (var i = 0; i < BoardConsts.height; i++) {
-      for (var a = 0; a < BoardConsts.width - 2; a++) {
+      for (var a = 0; a < BoardConsts.width - 1; a++) {
         if (controller.tiles[(i * BoardConsts.width) + a].number ==
             controller.tiles[((i * BoardConsts.width) + a) + 1].number) {
           _matchCount++;

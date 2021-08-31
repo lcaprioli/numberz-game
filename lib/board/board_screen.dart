@@ -65,7 +65,7 @@ class _BoardScreenState extends State<BoardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*      appBar: AppBar(
         toolbarHeight: 60,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,51 +74,110 @@ class _BoardScreenState extends State<BoardScreen> {
             Text('Timer: ${controller.seconds}'),
           ],
         ),
-      ),
-      body: Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Listener(
-              onPointerMove: functions.pointerDown,
-              onPointerUp: functions.pointerUp,
-              child: Container(
-                padding: EdgeInsets.all(15),
-                constraints: BoxConstraints(maxWidth: 325),
-                child: GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: BoardConsts.width,
-                  children: List.generate(BoardConsts.width * BoardConsts.height, (index) {
-                    return BoardWidgets().buildTile(controller.tiles[index], context);
-                  }),
-                ),
+      ), */
+      body: Column(
+        children: [
+          buildRowDecoration(),
+          Expanded(
+            child: Container(
+              color: Colors.amber,
+              child: Flex(
+                direction: Axis.horizontal,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Flexible(
+                    flex: 9,
+                    child: Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: Column(
+                        children: [
+                          Container(
+                            color: Colors.blueAccent,
+                            child: Listener(
+                              onPointerMove: functions.pointerDown,
+                              onPointerUp: functions.pointerUp,
+                              child: Container(
+                                padding: EdgeInsets.all(15),
+                                constraints:
+                                    BoxConstraints(maxHeight: MediaQuery.of(context).size.height - 150),
+                                child: GridView.count(
+                                  shrinkWrap: true,
+                                  crossAxisCount: BoardConsts.width,
+                                  children:
+                                      List.generate(BoardConsts.width * BoardConsts.height, (index) {
+                                    return BoardWidgets().buildTile(controller.tiles[index], context);
+                                  }),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 20,
+                            color: Colors.brown,
+                            child: Row(
+                              children: [
+                                Flexible(
+                                  flex: 60 - ((controller.seconds / 20) * 60).round(),
+                                  child: Container(
+                                    height: 20,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Flexible(
+                                  flex: ((controller.seconds / 20) * 60).round(),
+                                  child: Container(
+                                    height: 20,
+                                    color: Colors.yellow,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    flex: 3,
+                    child: Container(
+                      color: Colors.green,
+                      padding: const EdgeInsets.all(30.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Score',
+                            style: Theme.of(context).textTheme.headline3,
+                          ),
+                          Text(
+                            '${controller.score}',
+                            style: Theme.of(context).textTheme.headline3,
+                          ),
+                          Container(),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                width: 20,
-                height: MediaQuery.of(context).size.height - 60,
-                color: Colors.brown,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      top: 0,
-                      width: 20,
-                      height: ((MediaQuery.of(context).size.height - 60) / 100) *
-                          (controller.seconds / 20) *
-                          100,
-                      child: Container(
-                        color: Colors.red,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
+          ),
+          buildRowDecoration(),
+        ],
       ),
+    );
+  }
+
+  Row buildRowDecoration() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 65,
+            color: Colors.red,
+            child: SizedBox.shrink(),
+          ),
+        )
+      ],
     );
   }
 }
