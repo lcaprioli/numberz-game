@@ -14,7 +14,19 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: BoardScreen(title: 'Flutter Demo Home Page'),
+      home: Scaffold(body: HomePage()),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BoardScreen(
+      title: 'Flutter Demo Home Page',
+      isMobile: MediaQuery.of(context).size.width < 540,
     );
   }
 }

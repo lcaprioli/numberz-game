@@ -2,48 +2,49 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:numbers/score/score_widget.dart';
 
 import 'board_consts.dart';
 import 'board_controller.dart';
-import 'board_functions.dart';
 import 'board_tile_model.dart';
-import 'board_widgets.dart';
+import 'board_widget.dart';
 
 class BoardScreen extends StatefulWidget {
-  BoardScreen({Key? key, required this.title}) : super(key: key);
+  BoardScreen({Key? key, required this.title, required this.isMobile}) : super(key: key);
 
   final String title;
-
+  final bool isMobile;
   @override
   _BoardScreenState createState() => _BoardScreenState();
 }
 
 class _BoardScreenState extends State<BoardScreen> {
+  late BoardController controller;
   late Timer _refresh;
   late Timer _timer;
-  late BoardFunctions functions;
-  final controller = BoardController();
-
   @override
   void initState() {
-    functions = BoardFunctions(controller);
+    controller = BoardController(
+      widget.isMobile ? BoardConsts.mobileWidth : BoardConsts.desktopWidth,
+      widget.isMobile ? BoardConsts.mobileHeight : BoardConsts.desktopHeight,
+    );
     controller.tiles = List.generate(
-      BoardConsts.width * BoardConsts.height,
+      controller.width * controller.height,
       (index) => Tile(
         key: GlobalKey(),
         number: Random().nextInt(5) + 1,
       ),
     );
-    functions.setInitial();
+    controller.setInitial();
     _refresh = Timer.periodic(Duration(milliseconds: 150), (t) {
       setState(() {
-        functions.moveDown(t);
+        controller.moveDown(t);
       });
     });
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         if (controller.seconds == 0) {
-          functions.decrease();
+          controller.decrease();
           controller.seconds = 20;
         } else {
           controller.seconds = controller.seconds - 1;
@@ -64,106 +65,67 @@ class _BoardScreenState extends State<BoardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      /*      appBar: AppBar(
-        toolbarHeight: 60,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Score: ${controller.score}'),
-            Text('Timer: ${controller.seconds}'),
-          ],
-        ),
-      ), */
-      body: Column(
-        children: [
-          buildRowDecoration(),
-          Expanded(
-            child: Container(
-              color: Colors.amber,
-              child: Flex(
-                direction: Axis.horizontal,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Flexible(
-                    flex: 9,
-                    child: Padding(
-                      padding: const EdgeInsets.all(30.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            color: Colors.blueAccent,
-                            child: Listener(
-                              onPointerMove: functions.pointerDown,
-                              onPointerUp: functions.pointerUp,
-                              child: Container(
-                                padding: EdgeInsets.all(15),
-                                constraints:
-                                    BoxConstraints(maxHeight: MediaQuery.of(context).size.height - 150),
-                                child: GridView.count(
-                                  shrinkWrap: true,
-                                  crossAxisCount: BoardConsts.width,
-                                  children:
-                                      List.generate(BoardConsts.width * BoardConsts.height, (index) {
-                                    return BoardWidgets().buildTile(controller.tiles[index], context);
-                                  }),
+    return Column(
+      children: [
+        buildRowDecoration(),
+        Expanded(
+          child: Container(
+            color: Colors.amber,
+            child: Flex(
+              direction: widget.isMobile ? Axis.vertical : Axis.horizontal,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  flex: 9,
+                  child: Padding(
+                    padding: const EdgeInsets.all(30.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        BoardWidget(controller: controller),
+                        Container(
+                          height: 20,
+                          color: Colors.brown,
+                          child: Row(
+                            children: [
+                              Flexible(
+                                flex: 60 - ((controller.seconds / 20) * 60).round(),
+                                child: Container(
+                                  height: 20,
+                                  color: Colors.black,
                                 ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            height: 20,
-                            color: Colors.brown,
-                            child: Row(
-                              children: [
-                                Flexible(
-                                  flex: 60 - ((controller.seconds / 20) * 60).round(),
-                                  child: Container(
-                                    height: 20,
-                                    color: Colors.black,
-                                  ),
+                              Flexible(
+                                flex: ((controller.seconds / 20) * 60).round(),
+                                child: Container(
+                                  height: 20,
+                                  color: Colors.yellow,
                                 ),
-                                Flexible(
-                                  flex: ((controller.seconds / 20) * 60).round(),
-                                  child: Container(
-                                    height: 20,
-                                    color: Colors.yellow,
-                                  ),
-                                )
-                              ],
-                            ),
+                              )
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                  Flexible(
-                    flex: 3,
-                    child: Container(
-                      color: Colors.green,
-                      padding: const EdgeInsets.all(30.0),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Score',
-                            style: Theme.of(context).textTheme.headline3,
-                          ),
-                          Text(
-                            '${controller.score}',
-                            style: Theme.of(context).textTheme.headline3,
-                          ),
-                          Container(),
-                        ],
-                      ),
+                ),
+                Flexible(
+                  flex: widget.isMobile ? 1 : 3,
+                  child: Container(
+                    color: Colors.green,
+                    child: Score(
+                      controller.score,
+                      widget.isMobile,
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
           ),
-          buildRowDecoration(),
-        ],
-      ),
+        ),
+        if (!widget.isMobile) buildRowDecoration(),
+      ],
     );
   }
 
