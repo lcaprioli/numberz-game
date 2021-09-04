@@ -97,8 +97,13 @@ class BoardController {
 
   void pointerUp(PointerUpEvent event) {
     if (selectedTiles.length > 1) {
+      const sequenceBonus = 3;
+      const matchScore = 10;
+      const sequenceBonusScore = 200;
+      const sequenceScore = 50;
       var sequence = true;
       var sequenceInverse = true;
+      var sequenceCount = 0;
       var match = true;
       for (var i = 0; i < selectedTiles.length - 1; i++) {
         var num = tiles[selectedTiles.elementAt(i)].number;
@@ -106,6 +111,7 @@ class BoardController {
 
         if (num != next + 1) {
           sequence = false;
+          sequenceCount++;
         }
       }
       for (var i = 0; i < selectedTiles.length - 1; i++) {
@@ -114,6 +120,7 @@ class BoardController {
 
         if (num != next - 1) {
           sequenceInverse = false;
+          sequenceCount++;
         }
       }
       if (!sequence && !sequenceInverse) {
@@ -134,10 +141,13 @@ class BoardController {
           tiles[selectedTiles.elementAt(i)] = tiles[selectedTiles.elementAt(i)].dispose();
         }
       }
+
       if (match) {
-        score += (10 * selectedTiles.length);
+        score += (matchScore * selectedTiles.length);
+      } else if (sequenceCount > sequenceBonus) {
+        score += (sequenceBonusScore * selectedTiles.length);
       } else if (sequence || sequenceInverse) {
-        score += (50 * selectedTiles.length);
+        score += (sequenceScore * selectedTiles.length);
       }
     }
     selectedTiles = {};
