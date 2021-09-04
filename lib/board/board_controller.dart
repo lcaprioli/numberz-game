@@ -8,7 +8,7 @@ import 'board_tile_model.dart';
 
 class BoardController {
   BoardController(this.width, this.height);
-  static const levelScale = 5;
+  static const levelScale = 10;
   static const sequenceBonus = 3;
   static const matchScore = 10;
   static const sequenceBonusScore = 200;
@@ -88,12 +88,20 @@ class BoardController {
   }
 
   void decrease() async {
+    var _targetTiles = <int>[];
+    var _maxLevel = (level > 2) ? 2 : level;
     for (var i = 0; i < width * height; i++) {
-      if (tiles[i].number < 5) {
+      if (tiles[i].number < (5 - _maxLevel)) {
         tiles[i] = tiles[i].setNumber(tiles[i].number + 1);
       } else {
+        _targetTiles.add(i);
+      }
+      var _targetCount = _targetTiles.length;
+      while (_targetTiles.length > (_targetCount / 3) * 2) {
+        var _randomPick = Random().nextInt(_targetTiles.length);
         score = score - 10;
-        tiles[i] = tiles[i].burn();
+        tiles[_targetTiles[_randomPick]] = tiles[_targetTiles[_randomPick]].burn();
+        _targetTiles.removeAt(_randomPick);
       }
     }
     await Future.delayed(Duration(seconds: 1));
