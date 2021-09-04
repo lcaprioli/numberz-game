@@ -41,14 +41,9 @@ class _BoardScreenState extends State<BoardScreen> {
         controller.moveDown(t);
       });
     });
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
       setState(() {
-        if (controller.seconds == 0) {
-          controller.decrease();
-          controller.seconds = 20;
-        } else {
-          controller.seconds = controller.seconds - 1;
-        }
+        controller.reduceTimer();
       });
     });
 
@@ -114,10 +109,7 @@ class _BoardScreenState extends State<BoardScreen> {
                   flex: widget.isMobile ? 1 : 3,
                   child: Container(
                     color: Colors.green,
-                    child: Score(
-                      controller.score,
-                      widget.isMobile,
-                    ),
+                    child: Score(controller.score, widget.isMobile, controller.level, controller.round),
                   ),
                 )
               ],

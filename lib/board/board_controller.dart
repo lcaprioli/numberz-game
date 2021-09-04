@@ -8,16 +8,37 @@ import 'board_tile_model.dart';
 
 class BoardController {
   BoardController(this.width, this.height);
+  static const levelScale = 5;
+  static const sequenceBonus = 3;
+  static const matchScore = 10;
+  static const sequenceBonusScore = 200;
+  static const sequenceScore = 50;
+  static const timeGap = 20;
+  int seconds = timeGap;
   final int width;
   final int height;
   List<Tile> tiles = [];
   Set<int> selectedTiles = {};
   int lastSpawn = Random().nextInt(5) + 1;
   int score = 0;
-  int seconds = 20;
+  int level = 0;
+  int round = 0;
   void setInitial() {
     for (var i = 0; i < width * height; i++) {
       tiles[i] = tiles[i].setNumber(spawnReplacement());
+    }
+  }
+
+  void reduceTimer() {
+    if (seconds == 0) {
+      decrease();
+      seconds = timeGap;
+      round++;
+      if (round % levelScale == 0) {
+        level++;
+      }
+    } else {
+      seconds = seconds - 1;
     }
   }
 
@@ -97,10 +118,6 @@ class BoardController {
 
   void pointerUp(PointerUpEvent event) {
     if (selectedTiles.length > 1) {
-      const sequenceBonus = 3;
-      const matchScore = 10;
-      const sequenceBonusScore = 200;
-      const sequenceScore = 50;
       var sequence = true;
       var sequenceInverse = true;
       var sequenceCount = 0;
