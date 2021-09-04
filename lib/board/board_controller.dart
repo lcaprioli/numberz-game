@@ -8,7 +8,7 @@ import 'board_tile_model.dart';
 
 class BoardController {
   BoardController(this.width, this.height);
-  static const levelScale = 10;
+  static const levelScale = 5;
   static const sequenceBonus = 3;
   static const matchScore = 10;
   static const sequenceBonusScore = 200;
