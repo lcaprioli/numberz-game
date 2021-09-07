@@ -7,6 +7,7 @@ import 'package:numbers/score/score_widget.dart';
 import 'board_consts.dart';
 import 'board_controller.dart';
 import 'board_tile_model.dart';
+import 'board_widget copy.dart';
 import 'board_widget.dart';
 
 class BoardScreen extends StatefulWidget {
@@ -64,56 +65,72 @@ class _BoardScreenState extends State<BoardScreen> {
       children: [
         buildRowDecoration(),
         Expanded(
-          child: Container(
-            color: Colors.amber,
-            child: Flex(
-              direction: widget.isMobile ? Axis.vertical : Axis.horizontal,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Flexible(
-                  flex: 9,
-                  child: Padding(
-                    padding: const EdgeInsets.all(30.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        BoardWidget(controller: controller),
-                        Container(
-                          height: 20,
-                          color: Colors.brown,
-                          child: Row(
-                            children: [
-                              Flexible(
-                                flex: 60 - ((controller.seconds / 20) * 60).round(),
-                                child: Container(
-                                  height: 20,
-                                  color: Colors.black,
+          child: Stack(
+            children: [
+              Flex(
+                direction: widget.isMobile ? Axis.vertical : Axis.horizontal,
+                children: [
+                  Flexible(
+                    flex: 8,
+                    fit: FlexFit.tight,
+                    child: Container(
+                      padding: EdgeInsets.all(30.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          BoardWidget(controller: controller),
+                          //   BoardWidgetStack(controller: controller),
+                          Container(
+                            height: 20,
+                            color: Colors.brown,
+                            child: Row(
+                              children: [
+                                Flexible(
+                                  flex: 60 - ((controller.seconds / 20) * 60).round(),
+                                  child: Container(
+                                    height: 20,
+                                    color: Colors.black,
+                                  ),
                                 ),
-                              ),
-                              Flexible(
-                                flex: ((controller.seconds / 20) * 60).round(),
-                                child: Container(
-                                  height: 20,
-                                  color: Colors.yellow,
-                                ),
-                              )
-                            ],
+                                Flexible(
+                                  flex: ((controller.seconds / 20) * 60).round(),
+                                  child: Container(
+                                    height: 20,
+                                    color: Colors.yellow,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Flexible(
-                  flex: widget.isMobile ? 1 : 3,
-                  child: Container(
-                    color: Colors.green,
-                    child: Score(controller.score, widget.isMobile, controller.level, controller.round),
+                  Flexible(
+                    flex: widget.isMobile ? 1 : 4,
+                    fit: FlexFit.tight,
+                    child: Score(
+                      controller.score,
+                      widget.isMobile,
+                      controller.level,
+                      controller.round,
+                    ),
+                  )
+                ],
+              ),
+              Visibility(
+                visible: !widget.isMobile,
+                child: Positioned(
+                  right: 20,
+                  bottom: 0,
+                  width: 450,
+                  child: Image.asset(
+                    'assets/images/greek.png',
+                    fit: BoxFit.cover,
                   ),
-                )
-              ],
-            ),
+                ),
+              ),
+            ],
           ),
         ),
         if (!widget.isMobile) buildRowDecoration(),
@@ -127,8 +144,12 @@ class _BoardScreenState extends State<BoardScreen> {
         Expanded(
           child: Container(
             height: 65,
-            color: Colors.red,
-            child: SizedBox.shrink(),
+            child: Image.asset(
+              'assets/images/pattern.png',
+              repeat: ImageRepeat.repeatX,
+              color: Color(0xFF0be1f7),
+              colorBlendMode: BlendMode.multiply,
+            ),
           ),
         )
       ],

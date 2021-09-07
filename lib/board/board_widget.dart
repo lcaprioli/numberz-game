@@ -24,7 +24,10 @@ class _BoardWidgetState extends State<BoardWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.blueAccent,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(25),
+      ),
       child: Listener(
         onPointerMove: widget.controller.pointerDown,
         onPointerUp: widget.controller.pointerUp,

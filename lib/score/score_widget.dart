@@ -8,54 +8,93 @@ class Score extends StatelessWidget {
   final bool isMobile;
   @override
   Widget build(BuildContext context) {
-    return Flex(
-      mainAxisAlignment: MainAxisAlignment.center,
-      direction: isMobile ? Axis.horizontal : Axis.vertical,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'Round',
-            style: Theme.of(context).textTheme.headline5,
+    return Padding(
+      padding: const EdgeInsets.all(30.0),
+      child: Flex(
+        mainAxisAlignment: MainAxisAlignment.start,
+        direction: isMobile ? Axis.horizontal : Axis.vertical,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Score',
+              style: Theme.of(context).textTheme.headline5?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 28.0,
+                  ),
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            '$round',
-            style: Theme.of(context).textTheme.headline5,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              '$score',
+              style: Theme.of(context).textTheme.headline5?.copyWith(
+                    color: Colors.white,
+                    fontSize: 28.0,
+                  ),
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'Level',
-            style: Theme.of(context).textTheme.headline5,
+          SizedBox(
+            height: 30,
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            '$level',
-            style: Theme.of(context).textTheme.headline5,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Round',
+                      style: Theme.of(context).textTheme.headline5?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 28.0,
+                          ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      '$round',
+                      style: Theme.of(context).textTheme.headline5?.copyWith(
+                            color: Colors.white,
+                            fontSize: 28.0,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Level',
+                      style: Theme.of(context).textTheme.headline5?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 28.0,
+                          ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      '$level',
+                      style: Theme.of(context).textTheme.headline5?.copyWith(
+                            color: Colors.white,
+                            fontSize: 28.0,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'Score',
-            style: Theme.of(context).textTheme.headline5,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            '$score',
-            style: Theme.of(context).textTheme.headline5,
-          ),
-        ),
-        Container(),
-      ],
+        ],
+      ),
     );
   }
 }
