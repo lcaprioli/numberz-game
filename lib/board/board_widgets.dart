@@ -6,6 +6,7 @@ import 'board_tile_model.dart';
 class BoardWidgets {
   Container buildTile(Tile tile, BuildContext context) {
     return Container(
+      key: tile.key,
       height: 50,
       width: 50,
       margin: EdgeInsets.all(5),
