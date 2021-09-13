@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:numbers/score/score_widget.dart';
 
@@ -8,7 +9,6 @@ import 'board_clock.dart';
 import 'board_consts.dart';
 import 'board_controller.dart';
 import 'board_tile_model.dart';
-import 'board_widget copy.dart';
 import 'board_widget.dart';
 
 class BoardScreen extends StatefulWidget {
@@ -16,6 +16,7 @@ class BoardScreen extends StatefulWidget {
 
   final String title;
   final bool isMobile;
+
   @override
   _BoardScreenState createState() => _BoardScreenState();
 }
@@ -24,8 +25,16 @@ class _BoardScreenState extends State<BoardScreen> {
   late BoardController controller;
   late Timer _refresh;
   late Timer _timer;
+
+  late AudioCache musicCache;
+  AudioPlayer? instance;
+
+  bool isPlaying = false;
+
   @override
   void initState() {
+    musicCache = AudioCache(prefix: "assets/audio/");
+
     controller = BoardController(
       widget.isMobile ? BoardConsts.mobileWidth : BoardConsts.desktopWidth,
       widget.isMobile ? BoardConsts.mobileHeight : BoardConsts.desktopHeight,
@@ -119,11 +128,61 @@ class _BoardScreenState extends State<BoardScreen> {
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: _buildSoundButton(),
+                ),
+              )
             ],
           ),
         ),
         if (!widget.isMobile) buildRowDecoration(),
       ],
+    );
+  }
+
+  MouseRegion _buildSoundButton() {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () async {
+          if (instance == null) {
+            instance = await musicCache.loop("game.mp3");
+
+            setState(() {
+              isPlaying = true;
+            });
+          } else {
+            if (instance?.state == PlayerState.PLAYING) {
+              instance?.pause();
+
+              setState(() {
+                isPlaying = false;
+              });
+            } else {
+              instance?.resume();
+
+              setState(() {
+                isPlaying = true;
+              });
+            }
+          }
+        },
+        child: ClipOval(
+          child: Container(
+            height: 60,
+            width: 60,
+            color: Colors.blue.shade800,
+            child: Icon(
+              isPlaying ? Icons.music_note : Icons.music_off,
+              size: 33,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
