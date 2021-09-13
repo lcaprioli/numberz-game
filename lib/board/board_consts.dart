@@ -6,6 +6,14 @@ class BoardConsts {
   static const desktopWidth = 11;
   static const desktopHeight = 5;
 
+  final levelScale = 5;
+  final timeGap = 20;
+
+  final sequenceBonus = 3;
+  final matchScore = 10;
+  final sequenceBonusScore = 200;
+  final sequenceScore = 50;
+
   static Set<Color> tileColors = {
     Color(0xfffede5f),
     Color(0xffd64915),

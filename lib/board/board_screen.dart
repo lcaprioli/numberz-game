@@ -3,16 +3,22 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:numbers/board/widgets/sound_button.dart';
 import 'package:numbers/score/score_widget.dart';
 
-import 'board_clock.dart';
+import 'widgets/clock.dart';
 import 'board_consts.dart';
 import 'board_controller.dart';
-import 'board_tile_model.dart';
+import 'models/tile_model.dart';
 import 'board_widget.dart';
+import 'widgets/decoration.dart';
 
 class BoardScreen extends StatefulWidget {
-  BoardScreen({Key? key, required this.title, required this.isMobile}) : super(key: key);
+  BoardScreen({
+    Key? key,
+    required this.title,
+    required this.isMobile,
+  }) : super(key: key);
 
   final String title;
   final bool isMobile;
@@ -28,10 +34,6 @@ class _BoardScreenState extends State<BoardScreen> {
 
   late AudioCache audioCache;
   AudioPlayer? musicPlayer;
-/* 
-  AudioPlayer? blopPlayer;
-
-  AudioPlayer? fryPlayer; */
 
   @override
   void initState() {
@@ -40,13 +42,11 @@ class _BoardScreenState extends State<BoardScreen> {
     controller = BoardController(
       widget.isMobile ? BoardConsts.mobileWidth : BoardConsts.desktopWidth,
       widget.isMobile ? BoardConsts.mobileHeight : BoardConsts.desktopHeight,
-      /*     blopPlayer: blopPlayer,
-      fryPlayer: fryPlayer, */
       audioCache: audioCache,
     );
     controller.tiles = List.generate(
       controller.width * controller.height,
-      (index) => Tile(
+      (index) => TileModel(
         key: GlobalKey(),
         number: Random().nextInt(5) + 1,
       ),
@@ -78,7 +78,7 @@ class _BoardScreenState extends State<BoardScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        buildRowDecoration(),
+        RowDecoration(),
         Expanded(
           child: Stack(
             children: [
@@ -94,7 +94,6 @@ class _BoardScreenState extends State<BoardScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           BoardWidget(controller: controller),
-                          //   BoardWidgetStack(controller: controller),
                         ],
                       ),
                     ),
@@ -123,88 +122,44 @@ class _BoardScreenState extends State<BoardScreen> {
               ),
               Visibility(
                 visible: !widget.isMobile,
-                child: Positioned(
-                  right: 20,
-                  bottom: 0,
-                  width: 450,
-                  child: Image.asset(
-                    'assets/images/greek.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                child: ChiefDecoration(),
               ),
               Padding(
                 padding: const EdgeInsets.all(30.0),
                 child: Align(
                   alignment: Alignment.bottomRight,
-                  child: _buildSoundButton(),
+                  child: SoundButton(
+                    onTap: () async {
+                      if (musicPlayer == null) {
+                        musicPlayer = await audioCache.loop("music.mp3");
+
+                        setState(() {
+                          controller.isMuted = false;
+                        });
+                      } else {
+                        if (musicPlayer?.state == PlayerState.PLAYING) {
+                          musicPlayer?.pause();
+
+                          setState(() {
+                            controller.isMuted = true;
+                          });
+                        } else {
+                          musicPlayer?.resume();
+
+                          setState(() {
+                            controller.isMuted = false;
+                          });
+                        }
+                      }
+                    },
+                    isMuted: controller.isMuted,
+                  ),
                 ),
               )
             ],
           ),
         ),
-        if (!widget.isMobile) buildRowDecoration(),
-      ],
-    );
-  }
-
-  MouseRegion _buildSoundButton() {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () async {
-          if (musicPlayer == null) {
-            musicPlayer = await audioCache.loop("music.mp3");
-
-            setState(() {
-              controller.isMuted = false;
-            });
-          } else {
-            if (musicPlayer?.state == PlayerState.PLAYING) {
-              musicPlayer?.pause();
-
-              setState(() {
-                controller.isMuted = true;
-              });
-            } else {
-              musicPlayer?.resume();
-
-              setState(() {
-                controller.isMuted = false;
-              });
-            }
-          }
-        },
-        child: ClipOval(
-          child: Container(
-            height: 60,
-            width: 60,
-            color: Colors.blue.shade800,
-            child: Icon(
-              controller.isMuted ? Icons.music_off : Icons.music_note,
-              size: 33,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Row buildRowDecoration() {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            height: 65,
-            child: Image.asset(
-              'assets/images/pattern.png',
-              repeat: ImageRepeat.repeatX,
-              color: Color(0xFF0be1f7),
-              colorBlendMode: BlendMode.multiply,
-            ),
-          ),
-        )
+        if (!widget.isMobile) RowDecoration(),
       ],
     );
   }

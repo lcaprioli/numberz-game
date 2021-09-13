@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 class Clock extends StatelessWidget {
   const Clock({
-    Key? key,
     required this.counter,
-  }) : super(key: key);
+  });
 
   final int counter;
 

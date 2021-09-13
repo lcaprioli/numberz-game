@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:numbers/board/board_controller.dart';
 
-import 'board_widgets.dart';
+import 'widgets/tile.dart';
 
 class BoardWidget extends StatefulWidget {
   const BoardWidget({
@@ -38,7 +38,7 @@ class _BoardWidgetState extends State<BoardWidget> {
             shrinkWrap: true,
             crossAxisCount: widget.controller.width,
             children: List.generate(widget.controller.width * widget.controller.height, (index) {
-              return BoardWidgets().buildTile(widget.controller.tiles[index], context);
+              return Tile(tile: widget.controller.tiles[index]);
             }),
           ),
         ),

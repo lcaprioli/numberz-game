@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:numbers/board/models/tile_model.dart';
 
-import 'board_consts.dart';
-import 'board_tile_model.dart';
+import '../board_consts.dart';
 
-class BoardWidgets {
-  Container buildTile(Tile tile, BuildContext context) {
+class Tile extends StatelessWidget {
+  const Tile({
+    required this.tile,
+  });
+
+  final TileModel tile;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       key: tile.key,
       height: 50,

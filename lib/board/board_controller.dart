@@ -5,31 +5,25 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import 'board_tile_model.dart';
+import 'board_consts.dart';
+import 'models/tile_model.dart';
 
 class BoardController {
   BoardController(
     this.width,
     this.height, {
-    /*    required this.fryPlayer,
-    required this.blopPlayer, */
     required this.audioCache,
   });
-  static const levelScale = 5;
-  static const timeGap = 20;
-  int seconds = timeGap;
 
-  static const sequenceBonus = 3;
-  static const matchScore = 10;
-  static const sequenceBonusScore = 200;
-  static const sequenceScore = 50;
   final int width;
   final int height;
-  AudioPlayer? fryPlayer;
-  AudioPlayer? blopPlayer;
   final AudioCache? audioCache;
 
-  List<Tile> tiles = [];
+  int seconds = BoardConsts().timeGap;
+  AudioPlayer? fryPlayer;
+  AudioPlayer? blopPlayer;
+
+  List<TileModel> tiles = [];
   Set<int> selectedTiles = {};
   int score = 0;
   int level = 0;
@@ -45,9 +39,9 @@ class BoardController {
   void reduceTimer() {
     if (seconds == 0) {
       decrease();
-      seconds = timeGap;
+      seconds = BoardConsts().timeGap;
       round++;
-      if (round % levelScale == 0) {
+      if (round % BoardConsts().levelScale == 0) {
         level++;
       }
     } else {
@@ -183,11 +177,11 @@ class BoardController {
       }
 
       if (match) {
-        score += (matchScore * selectedTiles.length);
-      } else if (sequenceCount > sequenceBonus) {
-        score += (sequenceBonusScore * selectedTiles.length);
+        score += (BoardConsts().matchScore * selectedTiles.length);
+      } else if (sequenceCount > BoardConsts().sequenceBonus) {
+        score += (BoardConsts().sequenceBonusScore * selectedTiles.length);
       } else if (sequence || sequenceInverse) {
-        score += (sequenceScore * selectedTiles.length);
+        score += (BoardConsts().sequenceScore * selectedTiles.length);
       }
     }
     selectedTiles = {};

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Tile {
-  Tile({
+class TileModel {
+  TileModel({
     required this.key,
     required this.number,
     this.hasHit = false,
@@ -15,8 +15,8 @@ class Tile {
   final bool disposed;
   final bool burned;
 
-  Tile hit() {
-    return Tile(
+  TileModel hit() {
+    return TileModel(
       key: key,
       number: number,
       hasHit: true,
@@ -25,8 +25,8 @@ class Tile {
     );
   }
 
-  Tile setNumber(int newNumber) {
-    return Tile(
+  TileModel setNumber(int newNumber) {
+    return TileModel(
       key: key,
       number: newNumber,
       hasHit: hasHit,
@@ -35,8 +35,8 @@ class Tile {
     );
   }
 
-  Tile unHit() {
-    return Tile(
+  TileModel unHit() {
+    return TileModel(
       key: key,
       number: number,
       hasHit: false,
@@ -45,8 +45,8 @@ class Tile {
     );
   }
 
-  Tile dispose() {
-    return Tile(
+  TileModel dispose() {
+    return TileModel(
       key: key,
       number: number,
       hasHit: hasHit,
@@ -55,8 +55,8 @@ class Tile {
     );
   }
 
-  Tile unDispose() {
-    return Tile(
+  TileModel unDispose() {
+    return TileModel(
       key: key,
       number: number,
       hasHit: hasHit,
@@ -65,8 +65,8 @@ class Tile {
     );
   }
 
-  Tile burn() {
-    return Tile(
+  TileModel burn() {
+    return TileModel(
       key: key,
       number: number,
       hasHit: hasHit,
