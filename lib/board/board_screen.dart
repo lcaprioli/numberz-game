@@ -26,18 +26,23 @@ class _BoardScreenState extends State<BoardScreen> {
   late Timer _refresh;
   late Timer _timer;
 
-  late AudioCache musicCache;
-  AudioPlayer? instance;
+  late AudioCache audioCache;
+  AudioPlayer? musicPlayer;
+/* 
+  AudioPlayer? blopPlayer;
 
-  bool isPlaying = false;
+  AudioPlayer? fryPlayer; */
 
   @override
   void initState() {
-    musicCache = AudioCache(prefix: "assets/audio/");
+    audioCache = AudioCache(prefix: "assets/audio/");
 
     controller = BoardController(
       widget.isMobile ? BoardConsts.mobileWidth : BoardConsts.desktopWidth,
       widget.isMobile ? BoardConsts.mobileHeight : BoardConsts.desktopHeight,
+      /*     blopPlayer: blopPlayer,
+      fryPlayer: fryPlayer, */
+      audioCache: audioCache,
     );
     controller.tiles = List.generate(
       controller.width * controller.height,
@@ -148,24 +153,24 @@ class _BoardScreenState extends State<BoardScreen> {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () async {
-          if (instance == null) {
-            instance = await musicCache.loop("game.mp3");
+          if (musicPlayer == null) {
+            musicPlayer = await audioCache.loop("music.mp3");
 
             setState(() {
-              isPlaying = true;
+              controller.isMuted = false;
             });
           } else {
-            if (instance?.state == PlayerState.PLAYING) {
-              instance?.pause();
+            if (musicPlayer?.state == PlayerState.PLAYING) {
+              musicPlayer?.pause();
 
               setState(() {
-                isPlaying = false;
+                controller.isMuted = true;
               });
             } else {
-              instance?.resume();
+              musicPlayer?.resume();
 
               setState(() {
-                isPlaying = true;
+                controller.isMuted = false;
               });
             }
           }
@@ -176,7 +181,7 @@ class _BoardScreenState extends State<BoardScreen> {
             width: 60,
             color: Colors.blue.shade800,
             child: Icon(
-              isPlaying ? Icons.music_note : Icons.music_off,
+              controller.isMuted ? Icons.music_off : Icons.music_note,
               size: 33,
               color: Colors.white,
             ),

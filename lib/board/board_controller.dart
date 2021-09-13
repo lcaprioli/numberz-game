@@ -1,13 +1,20 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'board_tile_model.dart';
 
 class BoardController {
-  BoardController(this.width, this.height);
+  BoardController(
+    this.width,
+    this.height, {
+    /*    required this.fryPlayer,
+    required this.blopPlayer, */
+    required this.audioCache,
+  });
   static const levelScale = 5;
   static const timeGap = 20;
   int seconds = timeGap;
@@ -18,12 +25,17 @@ class BoardController {
   static const sequenceScore = 50;
   final int width;
   final int height;
+  AudioPlayer? fryPlayer;
+  AudioPlayer? blopPlayer;
+  final AudioCache? audioCache;
+
   List<Tile> tiles = [];
   Set<int> selectedTiles = {};
   int score = 0;
   int level = 0;
   int round = 0;
   int lastSpawn = Random().nextInt(5) + 1;
+  bool isMuted = true;
   void setInitial() {
     for (var i = 0; i < width * height; i++) {
       tiles[i] = tiles[i].setNumber(spawnReplacement());
@@ -105,7 +117,8 @@ class BoardController {
         _targetTiles.removeAt(_randomPick);
       }
     }
-    //await Future.delayed(Duration(seconds: 1));
+    if (!isMuted) fryPlayer = await audioCache?.play('fry.mp3');
+    await Future.delayed(Duration(seconds: 2));
     for (var i = 0; i < width * height; i++) {
       if (tiles[i].burned) {
         tiles[i] = tiles[i].dispose();
@@ -113,7 +126,7 @@ class BoardController {
     }
   }
 
-  void pointerDown(PointerMoveEvent event) {
+  void pointerDown(PointerMoveEvent event) async {
     for (var i = 0; i < width * height; i++) {
       final box = tiles[i].key.currentContext?.findRenderObject() as RenderBox;
       final result = BoxHitTestResult();
@@ -125,7 +138,7 @@ class BoardController {
     }
   }
 
-  void pointerUp(PointerUpEvent event) {
+  void pointerUp(PointerUpEvent event) async {
     if (selectedTiles.length > 1) {
       var sequence = true;
       var sequenceInverse = true;
@@ -166,6 +179,7 @@ class BoardController {
         for (var i = 0; i < selectedTiles.length; i++) {
           tiles[selectedTiles.elementAt(i)] = tiles[selectedTiles.elementAt(i)].dispose();
         }
+        if (!isMuted) blopPlayer = await audioCache?.play('blop.mp3');
       }
 
       if (match) {
