@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:numbers/board/widgets/sound_button.dart';
-import 'package:numbers/score/score_widget.dart';
 
 import 'widgets/clock.dart';
 import 'board_consts.dart';
@@ -12,6 +11,7 @@ import 'board_controller.dart';
 import 'models/tile_model.dart';
 import 'board_widget.dart';
 import 'widgets/decoration.dart';
+import 'widgets/score.dart';
 
 class BoardScreen extends StatefulWidget {
   BoardScreen({
