@@ -105,7 +105,7 @@ class BoardController {
         _targetTiles.removeAt(_randomPick);
       }
     }
-    await Future.delayed(Duration(seconds: 1));
+    //await Future.delayed(Duration(seconds: 1));
     for (var i = 0; i < width * height; i++) {
       if (tiles[i].burned) {
         tiles[i] = tiles[i].dispose();

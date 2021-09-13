@@ -14,26 +14,31 @@ class Score extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         direction: isMobile ? Axis.horizontal : Axis.vertical,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Score',
-              style: Theme.of(context).textTheme.headline5?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 28.0,
-                  ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              '$score',
-              style: Theme.of(context).textTheme.headline5?.copyWith(
-                    color: Colors.white,
-                    fontSize: 28.0,
-                  ),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Score',
+                  style: Theme.of(context).textTheme.headline5?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 28.0,
+                      ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '$score',
+                  style: Theme.of(context).textTheme.headline5?.copyWith(
+                        color: Colors.white,
+                        fontSize: 28.0,
+                      ),
+                ),
+              ),
+            ],
           ),
           SizedBox(
             height: 30,
