@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/board/models/tile_model.dart';
 
 import '../board_consts.dart';
@@ -33,23 +34,26 @@ class Tile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(45),
                   border: Border.all(
                     color: Colors.black,
-                    width: 3,
+                    width: 1,
                   ),
                 ),
                 child: Center(
                   child: Text(
                     '${tile.disposed ? '' : tile.number}',
-                    style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        fontSize: 22,
+                    style: GoogleFonts.gfsNeohellenic(
+                      textStyle: TextStyle(
+                        color: tile.hasHit ? Colors.amber : Colors.black,
                         fontWeight: FontWeight.bold,
-                        color: tile.hasHit ? Colors.white : Colors.black),
+                        fontSize: 32.0,
+                      ),
+                    ),
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 10.0, top: 5),
                 child: PhysicalModel(
-                    shadowColor: Colors.black,
+                    shadowColor: Colors.black.withOpacity(.5),
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(45),
                     elevation: 2,

@@ -10,21 +10,22 @@ class MainBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color(0xFF00d5f4),
         body: Stack(
-      fit: StackFit.expand,
-      children: [
-        Image.asset(
-          'assets/images/bg.png',
-          fit: BoxFit.cover,
-        ),
-        Column(
+          fit: StackFit.expand,
           children: [
-            RowDecoration(),
-            content,
-            if (!MediaQueryUtils.isMobile(context)) RowDecoration(),
+            Image.asset(
+              'assets/images/bg.png',
+              fit: BoxFit.cover,
+            ),
+            Column(
+              children: [
+                RowDecoration(),
+                content,
+                if (!MediaQueryUtils.isMobile(context)) RowDecoration(),
+              ],
+            ),
           ],
-        ),
-      ],
-    ));
+        ));
   }
 }

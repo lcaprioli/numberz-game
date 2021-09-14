@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/board/board_screen.dart';
 import 'package:numbers/shared/utils/media_query.dart';
 
@@ -54,6 +55,27 @@ class _SplashState extends State<Splash> {
               'assets/images/splash.png',
               width: 333,
             ),
+          ),
+          Visibility(
+            visible: false,
+            child: Text(
+              ' ',
+              style: GoogleFonts.gfsNeohellenic(
+                textStyle: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 32.0,
+                ),
+              ),
+            ),
+          ),
+          Visibility(
+            visible: false,
+            child: Image.asset('assets/images/pattern.png'),
+          ),
+          Visibility(
+            visible: false,
+            child: Image.asset('assets/images/bg.png'),
           ),
         ],
       ),

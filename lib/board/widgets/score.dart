@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Score extends StatelessWidget {
   const Score(this.score, this.isMobile, this.level, this.round);
@@ -21,21 +22,26 @@ class Score extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   'Score',
-                  style: Theme.of(context).textTheme.headline5?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 28.0,
-                      ),
+                  style: GoogleFonts.gfsNeohellenic(
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32.0,
+                    ),
+                  ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   '$score',
-                  style: Theme.of(context).textTheme.headline5?.copyWith(
-                        color: Colors.white,
-                        fontSize: 28.0,
-                      ),
+                  style: GoogleFonts.gfsNeohellenic(
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32.0,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -52,21 +58,26 @@ class Score extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       'Round',
-                      style: Theme.of(context).textTheme.headline5?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 28.0,
-                          ),
+                      style: GoogleFonts.gfsNeohellenic(
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 32.0,
+                        ),
+                      ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       '$round',
-                      style: Theme.of(context).textTheme.headline5?.copyWith(
-                            color: Colors.white,
-                            fontSize: 28.0,
-                          ),
+                      style: GoogleFonts.gfsNeohellenic(
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 32.0,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -77,21 +88,26 @@ class Score extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       'Level',
-                      style: Theme.of(context).textTheme.headline5?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 28.0,
-                          ),
+                      style: GoogleFonts.gfsNeohellenic(
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 32.0,
+                        ),
+                      ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       '$level',
-                      style: Theme.of(context).textTheme.headline5?.copyWith(
-                            color: Colors.white,
-                            fontSize: 28.0,
-                          ),
+                      style: GoogleFonts.gfsNeohellenic(
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 32.0,
+                        ),
+                      ),
                     ),
                   ),
                 ],
