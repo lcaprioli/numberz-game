@@ -78,91 +78,85 @@ class _BoardScreenState extends State<BoardScreen> {
   @override
   Widget build(BuildContext context) {
     return MainBody(
-      content: Column(
-        children: [
-          RowDecoration(),
-          Expanded(
-            child: Stack(
+      content: Expanded(
+        child: Stack(
+          children: [
+            Flex(
+              direction: widget.isMobile ? Axis.vertical : Axis.horizontal,
               children: [
-                Flex(
-                  direction: widget.isMobile ? Axis.vertical : Axis.horizontal,
-                  children: [
-                    Flexible(
-                      flex: 8,
-                      fit: FlexFit.tight,
-                      child: Container(
-                        padding: EdgeInsets.all(30.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            BoardWidget(controller: controller),
-                          ],
+                Flexible(
+                  flex: 8,
+                  fit: FlexFit.tight,
+                  child: Container(
+                    padding: EdgeInsets.all(30.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        BoardWidget(controller: controller),
+                      ],
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: widget.isMobile ? 1 : 4,
+                  fit: FlexFit.tight,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30.0),
+                        child: Clock(
+                          counter: controller.seconds,
                         ),
                       ),
-                    ),
-                    Flexible(
-                      flex: widget.isMobile ? 1 : 4,
-                      fit: FlexFit.tight,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 30.0),
-                            child: Clock(
-                              counter: controller.seconds,
-                            ),
-                          ),
-                          Score(
-                            controller.score,
-                            widget.isMobile,
-                            controller.level,
-                            controller.round,
-                          ),
-                        ],
+                      Score(
+                        controller.score,
+                        widget.isMobile,
+                        controller.level,
+                        controller.round,
                       ),
-                    )
-                  ],
-                ),
-                Visibility(
-                  visible: !widget.isMobile,
-                  child: ChiefDecoration(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(30.0),
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: SoundButton(
-                      onTap: () async {
-                        if (musicPlayer == null) {
-                          musicPlayer = await audioCache.loop("music.mp3");
-
-                          setState(() {
-                            controller.isMuted = false;
-                          });
-                        } else {
-                          if (musicPlayer?.state == PlayerState.PLAYING) {
-                            musicPlayer?.pause();
-
-                            setState(() {
-                              controller.isMuted = true;
-                            });
-                          } else {
-                            musicPlayer?.resume();
-
-                            setState(() {
-                              controller.isMuted = false;
-                            });
-                          }
-                        }
-                      },
-                      isMuted: controller.isMuted,
-                    ),
+                    ],
                   ),
                 )
               ],
             ),
-          ),
-          if (!widget.isMobile) RowDecoration(),
-        ],
+            Visibility(
+              visible: !widget.isMobile,
+              child: ChiefDecoration(),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: SoundButton(
+                  onTap: () async {
+                    if (musicPlayer == null) {
+                      musicPlayer = await audioCache.loop("music.mp3");
+
+                      setState(() {
+                        controller.isMuted = false;
+                      });
+                    } else {
+                      if (musicPlayer?.state == PlayerState.PLAYING) {
+                        musicPlayer?.pause();
+
+                        setState(() {
+                          controller.isMuted = true;
+                        });
+                      } else {
+                        musicPlayer?.resume();
+
+                        setState(() {
+                          controller.isMuted = false;
+                        });
+                      }
+                    }
+                  },
+                  isMuted: controller.isMuted,
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

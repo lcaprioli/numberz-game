@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:numbers/board/board_screen.dart';
+import 'package:numbers/shared/utils/media_query.dart';
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class _SplashState extends State<Splash> {
               MaterialPageRoute<void>(
                 builder: (BuildContext context) => BoardScreen(
                   title: 'Flutter Demo Home Page',
-                  isMobile: MediaQuery.of(context).size.width < 540,
+                  isMobile: MediaQueryUtils.isMobile(context),
                 ),
               ),
             );

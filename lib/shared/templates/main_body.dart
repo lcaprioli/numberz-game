@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:numbers/board/widgets/decoration.dart';
+import 'package:numbers/shared/utils/media_query.dart';
 
 class MainBody extends StatelessWidget {
   const MainBody({Key? key, required this.content}) : super(key: key);
@@ -15,7 +17,13 @@ class MainBody extends StatelessWidget {
           'assets/images/bg.png',
           fit: BoxFit.cover,
         ),
-        content,
+        Column(
+          children: [
+            RowDecoration(),
+            content,
+            if (!MediaQueryUtils.isMobile(context)) RowDecoration(),
+          ],
+        ),
       ],
     ));
   }
