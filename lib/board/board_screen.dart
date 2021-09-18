@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:numbers/board/widgets/sound_button.dart';
+import 'package:numbers/game_over/game_over.dart';
 import 'package:numbers/shared/templates/main_body.dart';
 
 import 'widgets/clock.dart';
@@ -58,9 +59,19 @@ class _BoardScreenState extends State<BoardScreen> {
         controller.moveDown(t);
       });
     });
-    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+    _timer = Timer.periodic(Duration(milliseconds: 200), (timer) {
       setState(() {
-        controller.reduceTimer();
+        if (controller.totalTime > 0) {
+          controller.reduceTimer();
+        } else {
+          Navigator.of(context).push<void>(
+            MaterialPageRoute<void>(
+                builder: (BuildContext context) => GameOver(
+                      score: controller.score,
+                    )),
+          );
+          _timer.cancel();
+        }
       });
     });
 
@@ -102,17 +113,41 @@ class _BoardScreenState extends State<BoardScreen> {
                   fit: FlexFit.tight,
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 30.0),
-                        child: Clock(
-                          counter: controller.seconds,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 30.0),
+                            child: Clock(
+                              counter: controller.totalTime,
+                              amount: BoardConsts().gameTime,
+                              title: 'Time left',
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 30.0),
+                            child: Clock(
+                              counter: controller.burnTime,
+                              amount: BoardConsts().timeGap,
+                              title: 'Burn',
+                            ),
+                          ),
+                          Opacity(
+                            opacity: controller.bonusTime > 0 ? 1.0 : 0.3,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 30.0),
+                              child: Clock(
+                                counter: controller.bonusTime,
+                                amount: BoardConsts().bonusGap,
+                                title: 'Bonus time',
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       Score(
                         controller.score,
                         widget.isMobile,
-                        controller.level,
-                        controller.round,
                       ),
                     ],
                   ),

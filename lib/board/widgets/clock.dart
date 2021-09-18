@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Clock extends StatelessWidget {
   const Clock({
     required this.counter,
+    required this.amount,
+    required this.title,
   });
 
   final int counter;
-
+  final int amount;
+  final String title;
   @override
   Widget build(BuildContext context) {
-    var _percent = ((20 - counter) / 20) * 100;
+    final _size = 70.0;
+    final _halfSize = _size / 2;
+    var _percent = ((amount - counter) / amount) * 100;
     var _rotation = (_percent / 100) * 6;
 
     Matrix4 matrix1 = new Matrix4.translationValues(0.0, 0.0, 0.0);
@@ -37,91 +43,118 @@ class Clock extends StatelessWidget {
       quart3 = false;
       matrix4.rotateZ(_rotation - 4.5);
     }
-    return SizedBox(
-      width: 50,
-      height: 50,
-      child: ClipOval(
-        child: Stack(
-          children: [
-            Container(
-              width: 50,
-              height: 50,
-              color: Colors.black,
-            ),
-            Visibility(
-              visible: quart1,
-              child: Align(
-                alignment: Alignment(1, -1),
-                child: Transform(
-                  transform: matrix1,
-                  origin: Offset(0, 25),
-                  child: Container(
-                    width: 25,
-                    height: 25,
-                    color: Colors.yellow,
-                  ),
-                ),
-              ),
-            ),
-            Visibility(
-              visible: quart2,
-              child: Align(
-                alignment: Alignment(1, 1),
-                child: Transform(
-                  transform: matrix2,
-                  origin: Offset(0, 0),
-                  child: Container(
-                    width: 25,
-                    height: 25,
-                    color: Colors.yellow,
-                  ),
-                ),
-              ),
-            ),
-            Visibility(
-              visible: quart3,
-              child: Align(
-                alignment: Alignment(-1, 1),
-                child: Transform(
-                  transform: matrix3,
-                  origin: Offset(25, 0),
-                  child: Container(
-                    width: 25,
-                    height: 25,
-                    color: Colors.yellow,
-                  ),
-                ),
-              ),
-            ),
-            Visibility(
-              visible: quart4,
-              child: Align(
-                alignment: Alignment(-1, -1),
-                child: Transform(
-                  transform: matrix4,
-                  origin: Offset(25, 25),
-                  child: Container(
-                    width: 25,
-                    height: 25,
-                    color: Colors.yellow,
-                  ),
-                ),
-              ),
-            ),
-            Visibility(
-              visible: !quart3,
-              child: Align(
-                alignment: Alignment(1, -1),
-                child: Container(
-                  width: 25,
-                  height: 25,
+    return Column(
+      children: [
+        SizedBox(
+          width: _size,
+          height: _size,
+          child: ClipOval(
+            child: Stack(
+              children: [
+                Container(
+                  width: _size,
+                  height: _size,
                   color: Colors.black,
                 ),
-              ),
+                Visibility(
+                  visible: quart1,
+                  child: Align(
+                    alignment: Alignment(1, -1),
+                    child: Transform(
+                      transform: matrix1,
+                      origin: Offset(0, _halfSize),
+                      child: Container(
+                        width: _halfSize,
+                        height: _halfSize,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: quart2,
+                  child: Align(
+                    alignment: Alignment(1, 1),
+                    child: Transform(
+                      transform: matrix2,
+                      origin: Offset(0, 0),
+                      child: Container(
+                        width: _halfSize,
+                        height: _halfSize,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: quart3,
+                  child: Align(
+                    alignment: Alignment(-1, 1),
+                    child: Transform(
+                      transform: matrix3,
+                      origin: Offset(_halfSize, 0),
+                      child: Container(
+                        width: _halfSize,
+                        height: _halfSize,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: quart4,
+                  child: Align(
+                    alignment: Alignment(-1, -1),
+                    child: Transform(
+                      transform: matrix4,
+                      origin: Offset(_halfSize, _halfSize),
+                      child: Container(
+                        width: _halfSize,
+                        height: _halfSize,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: !quart3,
+                  child: Align(
+                    alignment: Alignment(1, -1),
+                    child: Container(
+                      width: _halfSize,
+                      height: _halfSize,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+        SizedBox(
+          height: 30,
+        ),
+        Text(
+          '$title',
+          style: GoogleFonts.gfsNeohellenic(
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 32.0,
+            ),
+          ),
+        ),
+        Text(
+          '$counter',
+          style: GoogleFonts.gfsNeohellenic(
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 32.0,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

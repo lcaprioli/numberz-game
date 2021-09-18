@@ -19,7 +19,10 @@ class BoardController {
   final int height;
   final AudioCache? audioCache;
 
-  int seconds = BoardConsts().timeGap;
+  int burnTime = BoardConsts().timeGap;
+  int totalTime = BoardConsts().gameTime;
+  int bonusTime = 0;
+
   AudioPlayer? fryPlayer;
   AudioPlayer? blopPlayer;
 
@@ -37,17 +40,29 @@ class BoardController {
   }
 
   void reduceTimer() {
-    if (seconds == 0) {
-      decrease();
-      seconds = BoardConsts().timeGap;
-      round++;
-      if (round % BoardConsts().levelScale == 0) {
-        level++;
-      }
+    if (bonusTime > 0) {
+      bonusTime = bonusTime - 1;
     } else {
-      seconds = seconds - 1;
+      if (burnTime == 0) {
+        decrease();
+        burnTime = BoardConsts().timeGap;
+        round++;
+        if (round % BoardConsts().levelScale == 0) {
+          level++;
+        }
+      } else {
+        burnTime = burnTime - 1;
+      }
+      if (totalTime == 0) {
+        gameOver();
+        totalTime = BoardConsts().gameTime;
+      } else {
+        totalTime = totalTime - 1;
+      }
     }
   }
+
+  void gameOver() {}
 
   void moveDown(Timer t) {
     for (var i = 0; i < width * height; i++) {
@@ -180,6 +195,7 @@ class BoardController {
         score += (BoardConsts().matchScore * selectedTiles.length);
       } else if (sequenceCount > BoardConsts().sequenceBonus) {
         score += (BoardConsts().sequenceBonusScore * selectedTiles.length);
+        bonusTime = BoardConsts().bonusGap;
       } else if (sequence || sequenceInverse) {
         score += (BoardConsts().sequenceScore * selectedTiles.length);
       }
