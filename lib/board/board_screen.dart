@@ -38,6 +38,8 @@ class _BoardScreenState extends State<BoardScreen> {
   late AudioCache audioCache;
   AudioPlayer? musicPlayer;
 
+  bool _clockAlarm = false;
+
   @override
   void initState() {
     audioCache = AudioCache(prefix: "assets/audio/");
@@ -59,26 +61,26 @@ class _BoardScreenState extends State<BoardScreen> {
       setState(() {
         controller.moveDown(t);
       });
+
+      _clockAlarm = !_clockAlarm;
     });
     _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
-      setState(() {
-        if (controller.totalTime > 0) {
-          controller.reduceTimer();
-        } else {
-          if (bestScore < controller.score) {
-            bestScore = controller.score;
-          }
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute<void>(
-              builder: (BuildContext context) => GameOver(
-                score: controller.score,
-                bestScore: bestScore,
-              ),
-            ),
-          );
-          _timer.cancel();
+      if (controller.totalTime > 0) {
+        controller.reduceTimer();
+      } else {
+        if (bestScore < controller.score) {
+          bestScore = controller.score;
         }
-      });
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => GameOver(
+              score: controller.score,
+              bestScore: bestScore,
+            ),
+          ),
+        );
+        _timer.cancel();
+      }
     });
 
     super.initState();
@@ -124,37 +126,40 @@ class _BoardScreenState extends State<BoardScreen> {
                   fit: FlexFit.tight,
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 30.0),
-                            child: Clock(
-                              counter: controller.totalTime,
-                              amount: BoardConsts().gameTime,
-                              title: 'Time left',
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 30.0),
-                            child: Clock(
-                              counter: controller.burnTime,
-                              amount: BoardConsts().timeGap,
-                              title: 'Burn',
-                            ),
-                          ),
-                          Opacity(
-                            opacity: controller.bonusTime > 0 ? 1.0 : 0.3,
-                            child: Padding(
+                      Opacity(
+                        opacity: controller.bonusTime > 0 && _clockAlarm ? .5 : 1.0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Padding(
                               padding: const EdgeInsets.only(top: 30.0),
                               child: Clock(
-                                counter: controller.bonusTime,
-                                amount: BoardConsts().bonusGap,
-                                title: 'Bonus time',
+                                counter: controller.totalTime,
+                                amount: BoardConsts().gameTime,
+                                title: 'Time left',
                               ),
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.only(top: 30.0),
+                              child: Clock(
+                                counter: controller.burnTime,
+                                amount: BoardConsts().timeGap,
+                                title: 'Burn',
+                              ),
+                            ),
+                            /* Opacity(
+                              opacity: controller.bonusTime > 0 ? 1.0 : 0.3,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 30.0),
+                                child: Clock(
+                                  counter: controller.bonusTime,
+                                  amount: BoardConsts().bonusGap,
+                                  title: 'Bonus time',
+                                ),
+                              ),
+                            ), */
+                          ],
+                        ),
                       ),
                       Score(
                         controller.score,
