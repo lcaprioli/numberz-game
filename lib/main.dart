@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:numbers/splash/splash.dart';
 
+int bestScore = 0;
+
 void main() {
   runApp(MyApp());
 }

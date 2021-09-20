@@ -7,6 +7,7 @@ import 'package:numbers/board/widgets/sound_button.dart';
 import 'package:numbers/game_over/game_over.dart';
 import 'package:numbers/shared/templates/main_body.dart';
 
+import '../main.dart';
 import 'widgets/clock.dart';
 import 'board_consts.dart';
 import 'board_controller.dart';
@@ -59,16 +60,21 @@ class _BoardScreenState extends State<BoardScreen> {
         controller.moveDown(t);
       });
     });
-    _timer = Timer.periodic(Duration(milliseconds: 200), (timer) {
+    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
       setState(() {
         if (controller.totalTime > 0) {
           controller.reduceTimer();
         } else {
-          Navigator.of(context).push<void>(
+          if (bestScore < controller.score) {
+            bestScore = controller.score;
+          }
+          Navigator.of(context).pushReplacement(
             MaterialPageRoute<void>(
-                builder: (BuildContext context) => GameOver(
-                      score: controller.score,
-                    )),
+              builder: (BuildContext context) => GameOver(
+                score: controller.score,
+                bestScore: bestScore,
+              ),
+            ),
           );
           _timer.cancel();
         }
@@ -103,7 +109,12 @@ class _BoardScreenState extends State<BoardScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        BoardWidget(controller: controller),
+                        Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: BoardWidget(controller: controller)),
                       ],
                     ),
                   ),

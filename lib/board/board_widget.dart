@@ -23,24 +23,18 @@ class _BoardWidgetState extends State<BoardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Listener(
-        onPointerMove: widget.controller.pointerDown,
-        onPointerUp: widget.controller.pointerUp,
-        child: Container(
-          padding: EdgeInsets.all(15),
-          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height - 150),
-          child: GridView.count(
-            shrinkWrap: true,
-            crossAxisCount: widget.controller.width,
-            children: List.generate(widget.controller.width * widget.controller.height, (index) {
-              return Tile(tile: widget.controller.tiles[index]);
-            }),
-          ),
+    return Listener(
+      onPointerMove: widget.controller.pointerDown,
+      onPointerUp: widget.controller.pointerUp,
+      child: Container(
+        padding: EdgeInsets.all(15),
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height - 150),
+        child: GridView.count(
+          shrinkWrap: true,
+          crossAxisCount: widget.controller.width,
+          children: List.generate(widget.controller.width * widget.controller.height, (index) {
+            return Tile(tile: widget.controller.tiles[index]);
+          }),
         ),
       ),
     );

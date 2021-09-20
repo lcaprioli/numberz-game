@@ -121,7 +121,7 @@ class BoardController {
       var _targetCount = _targetTiles.length;
       while (_targetTiles.length > (_targetCount / 3) * 2) {
         var _randomPick = Random().nextInt(_targetTiles.length);
-        score = score - 10;
+        if (score >= 10) score = score - 10;
         tiles[_targetTiles[_randomPick]] = tiles[_targetTiles[_randomPick]].burn();
         _targetTiles.removeAt(_randomPick);
       }
