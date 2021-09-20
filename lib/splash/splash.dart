@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/board/board_screen.dart';
+import 'package:numbers/menu/menu_screen.dart';
 import 'package:numbers/shared/utils/media_query.dart';
 
 class Splash extends StatefulWidget {
@@ -26,10 +27,7 @@ class _SplashState extends State<Splash> {
           Future.delayed(Duration(seconds: 1), () {
             Navigator.of(context).push<void>(
               MaterialPageRoute<void>(
-                builder: (BuildContext context) => BoardScreen(
-                  title: 'Flutter Demo Home Page',
-                  isMobile: MediaQueryUtils.isMobile(context),
-                ),
+                builder: (BuildContext context) => MenuScreen(),
               ),
             );
           });
