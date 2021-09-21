@@ -4,7 +4,7 @@ class BoardConsts {
   static const mobileWidth = 5;
   static const mobileHeight = 6;
   static const desktopWidth = 11;
-  static const desktopHeight = 5;
+  static const desktopHeight = 6;
 
   final levelScale = 5;
   final timeGap = 20;
@@ -17,10 +17,18 @@ class BoardConsts {
   final sequenceScore = 50;
 
   static Set<Color> tileColors = {
-    Color(0xfffede5f),
-    Color(0xffd64915),
-    Color(0xffe36825),
-    Color(0xffb88251),
-    Color(0xff927777),
+    Color(0xffef9d1e),
+    Color(0xffd75509),
+    Color(0xff4e0501),
+    Color(0xff39261c),
+    Color(0xff47403d),
   };
+
+  static List<Color> fontColors = [
+    Color(0xff3a0d05),
+    Color(0xffe8cfbc),
+    Color(0xfff5d268),
+    Color(0xfff7935c),
+    Colors.white,
+  ];
 }
