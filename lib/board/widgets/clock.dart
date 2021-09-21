@@ -66,7 +66,7 @@ class Clock extends StatelessWidget {
                       child: Container(
                         width: _halfSize,
                         height: _halfSize,
-                        color: Colors.yellow,
+                        color: Color(0xffd75509),
                       ),
                     ),
                   ),
@@ -81,7 +81,7 @@ class Clock extends StatelessWidget {
                       child: Container(
                         width: _halfSize,
                         height: _halfSize,
-                        color: Colors.yellow,
+                        color: Color(0xffd75509),
                       ),
                     ),
                   ),
@@ -96,7 +96,7 @@ class Clock extends StatelessWidget {
                       child: Container(
                         width: _halfSize,
                         height: _halfSize,
-                        color: Colors.yellow,
+                        color: Color(0xffd75509),
                       ),
                     ),
                   ),
@@ -111,7 +111,7 @@ class Clock extends StatelessWidget {
                       child: Container(
                         width: _halfSize,
                         height: _halfSize,
-                        color: Colors.yellow,
+                        color: Color(0xffd75509),
                       ),
                     ),
                   ),
