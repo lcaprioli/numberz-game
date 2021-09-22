@@ -35,24 +35,28 @@ class _MenuScreenState extends State<MenuScreen> {
                         padding: const EdgeInsets.all(18.0),
                         child: Column(
                           children: [
-                            Text(
-                              'LOUKUOMADES',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.gfsNeohellenic(
-                                textStyle: TextStyle(
-                                  color: TemplateColors.colorDarkBlue,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 74.0,
+                            FittedBox(
+                              child: Text(
+                                'LOUKUOMADES',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.gfsNeohellenic(
+                                  textStyle: TextStyle(
+                                    color: TemplateColors.colorDarkBlue,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 74.0,
+                                  ),
                                 ),
                               ),
                             ),
-                            Text(
-                              'Λουκουμάδες',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.gfsNeohellenic(
-                                textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 68.0,
+                            FittedBox(
+                              child: Text(
+                                'Λουκουμάδες',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.gfsNeohellenic(
+                                  textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 68.0,
+                                  ),
                                 ),
                               ),
                             )
@@ -81,9 +85,11 @@ class _MenuScreenState extends State<MenuScreen> {
                                 onPressed: () {
                                   Navigator.of(context).push<void>(
                                     MaterialPageRoute<void>(
-                                      builder: (BuildContext context) => BoardScreen(
+                                      builder: (BuildContext context) =>
+                                          BoardScreen(
                                         title: 'Flutter Demo Home Page',
-                                        isMobile: MediaQueryUtils.isMobile(context),
+                                        isMobile:
+                                            MediaQueryUtils.isMobile(context),
                                       ),
                                     ),
                                   );
@@ -146,16 +152,13 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
             Visibility(
               visible: !MediaQueryUtils.isMobile(context),
-              child: Positioned.fill(
+              child: Positioned(
                 left: 40,
-                top: 40,
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/images/greek.png',
-                      fit: BoxFit.contain,
-                    ),
-                  ],
+                bottom: 0,
+                width: MediaQuery.of(context).size.width / 2,
+                child: Image.asset(
+                  'assets/images/greek.png',
+                  fit: BoxFit.contain,
                 ),
               ),
             ),

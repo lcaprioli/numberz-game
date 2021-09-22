@@ -112,11 +112,12 @@ class _BoardScreenState extends State<BoardScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                            child: BoardWidget(controller: controller)),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: BoardWidget(controller: controller),
+                        ),
                       ],
                     ),
                   ),
@@ -124,86 +125,76 @@ class _BoardScreenState extends State<BoardScreen> {
                 Flexible(
                   flex: widget.isMobile ? 1 : 4,
                   fit: FlexFit.tight,
-                  child: Column(
-                    children: [
-                      Opacity(
-                        opacity: controller.bonusTime > 0 && _clockAlarm ? .5 : 1.0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 30.0),
-                              child: Clock(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 40,
+                      left: 40,
+                      right: 40,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Opacity(
+                          opacity: controller.bonusTime > 0 && _clockAlarm
+                              ? .5
+                              : 1.0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Clock(
                                 counter: controller.totalTime,
                                 amount: BoardConsts().gameTime,
                                 title: 'Time left',
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 30.0),
-                              child: Clock(
+                              Clock(
                                 counter: controller.burnTime,
                                 amount: BoardConsts().timeGap,
                                 title: 'Burn',
                               ),
-                            ),
-                            /* Opacity(
-                              opacity: controller.bonusTime > 0 ? 1.0 : 0.3,
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 30.0),
-                                child: Clock(
-                                  counter: controller.bonusTime,
-                                  amount: BoardConsts().bonusGap,
-                                  title: 'Bonus time',
-                                ),
-                              ),
-                            ), */
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Score(
-                        controller.score,
-                        widget.isMobile,
-                      ),
-                    ],
+                        Score(
+                          controller.score,
+                          widget.isMobile,
+                        ),
+                        Visibility(
+                          visible: !widget.isMobile,
+                          child: ChiefDecoration(),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],
             ),
-            Visibility(
-              visible: !widget.isMobile,
-              child: ChiefDecoration(),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: SoundButton(
-                  onTap: () async {
-                    if (musicPlayer == null) {
-                      musicPlayer = await audioCache.loop("music.mp3");
+            Align(
+              alignment: Alignment.bottomRight,
+              child: SoundButton(
+                onTap: () async {
+                  if (musicPlayer == null) {
+                    musicPlayer = await audioCache.loop("music.mp3");
+
+                    setState(() {
+                      controller.isMuted = false;
+                    });
+                  } else {
+                    if (musicPlayer?.state == PlayerState.PLAYING) {
+                      musicPlayer?.pause();
+
+                      setState(() {
+                        controller.isMuted = true;
+                      });
+                    } else {
+                      musicPlayer?.resume();
 
                       setState(() {
                         controller.isMuted = false;
                       });
-                    } else {
-                      if (musicPlayer?.state == PlayerState.PLAYING) {
-                        musicPlayer?.pause();
-
-                        setState(() {
-                          controller.isMuted = true;
-                        });
-                      } else {
-                        musicPlayer?.resume();
-
-                        setState(() {
-                          controller.isMuted = false;
-                        });
-                      }
                     }
-                  },
-                  isMuted: controller.isMuted,
-                ),
+                  }
+                },
+                isMuted: controller.isMuted,
               ),
             )
           ],

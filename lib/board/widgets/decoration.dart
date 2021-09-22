@@ -31,10 +31,10 @@ class ChiefDecoration extends StatelessWidget {
     return Positioned(
       right: 20,
       bottom: 0,
-      width: 450,
+      width: MediaQuery.of(context).size.width / 4,
       child: Image.asset(
         'assets/images/greek.png',
-        fit: BoxFit.cover,
+        fit: BoxFit.contain,
       ),
     );
   }
