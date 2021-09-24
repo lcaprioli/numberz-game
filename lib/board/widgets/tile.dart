@@ -49,7 +49,8 @@ class _TileState extends State<Tile> {
                           ? Colors.black
                           : widget.tile.burned
                               ? Colors.black
-                              : BoardConsts.tileColors.elementAt(widget.tile.number - 1),
+                              : BoardConsts.tileColors
+                                  .elementAt(widget.tile.number - 1),
                     ),
                   ),
                   Visibility(
@@ -83,7 +84,8 @@ class _TileState extends State<Tile> {
                           textStyle: TextStyle(
                             color: widget.tile.hasHit
                                 ? Colors.amber
-                                : BoardConsts.fontColors.elementAt(widget.tile.number - 1),
+                                : BoardConsts.fontColors
+                                    .elementAt(widget.tile.number - 1),
                             fontWeight: FontWeight.bold,
                             fontSize: 36.0,
                           ),

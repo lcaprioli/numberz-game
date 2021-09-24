@@ -7,7 +7,8 @@ import 'package:numbers/shared/templates/main_body.dart';
 import 'package:numbers/shared/utils/media_query.dart';
 
 class GameOver extends StatefulWidget {
-  const GameOver({required this.score, required this.bestScore, Key? key}) : super(key: key);
+  const GameOver({required this.score, required this.bestScore, Key? key})
+      : super(key: key);
   final int score;
   final int bestScore;
   @override
@@ -27,7 +28,9 @@ class _GameOverState extends State<GameOver> {
         child: Stack(
           children: [
             Flex(
-              direction: MediaQueryUtils.isMobile(context) ? Axis.vertical : Axis.horizontal,
+              direction: MediaQueryUtils.isMobile(context)
+                  ? Axis.vertical
+                  : Axis.horizontal,
               children: [
                 Flexible(
                   flex: 8,
@@ -130,8 +133,10 @@ class _GameOverState extends State<GameOver> {
                                   onPressed: () {
                                     Navigator.of(context).pushReplacement(
                                       MaterialPageRoute<void>(
-                                        builder: (BuildContext context) => BoardScreen(
-                                          isMobile: MediaQueryUtils.isMobile(context),
+                                        builder: (BuildContext context) =>
+                                            BoardScreen(
+                                          isMobile:
+                                              MediaQueryUtils.isMobile(context),
                                           title: 'Game',
                                         ),
                                       ),
@@ -175,7 +180,19 @@ class _GameOverState extends State<GameOver> {
             ),
             Visibility(
               visible: !MediaQueryUtils.isMobile(context),
-              child: ChiefDecoration(),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 18.0),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 3,
+                    child: Image.asset(
+                      'assets/images/greek.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
