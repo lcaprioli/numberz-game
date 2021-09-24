@@ -170,31 +170,34 @@ class _BoardScreenState extends State<BoardScreen> {
             ),
             Align(
               alignment: Alignment.bottomRight,
-              child: SoundButton(
-                onTap: () async {
-                  if (musicPlayer == null) {
-                    musicPlayer = await audioCache.loop("music.mp3");
-
-                    setState(() {
-                      controller.isMuted = false;
-                    });
-                  } else {
-                    if (musicPlayer?.state == PlayerState.PLAYING) {
-                      musicPlayer?.pause();
-
-                      setState(() {
-                        controller.isMuted = true;
-                      });
-                    } else {
-                      musicPlayer?.resume();
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: SoundButton(
+                  onTap: () async {
+                    if (musicPlayer == null) {
+                      musicPlayer = await audioCache.loop("music.mp3");
 
                       setState(() {
                         controller.isMuted = false;
                       });
+                    } else {
+                      if (musicPlayer?.state == PlayerState.PLAYING) {
+                        musicPlayer?.pause();
+
+                        setState(() {
+                          controller.isMuted = true;
+                        });
+                      } else {
+                        musicPlayer?.resume();
+
+                        setState(() {
+                          controller.isMuted = false;
+                        });
+                      }
                     }
-                  }
-                },
-                isMuted: controller.isMuted,
+                  },
+                  isMuted: controller.isMuted,
+                ),
               ),
             )
           ],

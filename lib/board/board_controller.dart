@@ -93,14 +93,16 @@ class BoardController {
     int _matchCount = 0;
     for (var i = 0; i < width; i++) {
       for (var a = 0; a < height - 1; a++) {
-        if (tiles[(a * width) + i].number == tiles[((a + 1) * width) + i].number) {
+        if (tiles[(a * width) + i].number ==
+            tiles[((a + 1) * width) + i].number) {
           _matchCount++;
         }
       }
     }
     for (var i = 0; i < height; i++) {
       for (var a = 0; a < width - 1; a++) {
-        if (tiles[(i * width) + a].number == tiles[((i * width) + a) + 1].number) {
+        if (tiles[(i * width) + a].number ==
+            tiles[((i * width) + a) + 1].number) {
           _matchCount++;
         }
       }
@@ -122,7 +124,8 @@ class BoardController {
       while (_targetTiles.length > (_targetCount / 3) * 2) {
         var _randomPick = Random().nextInt(_targetTiles.length);
         if (score >= 10) score = score - 10;
-        tiles[_targetTiles[_randomPick]] = tiles[_targetTiles[_randomPick]].burn();
+        tiles[_targetTiles[_randomPick]] =
+            tiles[_targetTiles[_randomPick]].burn();
         _targetTiles.removeAt(_randomPick);
       }
     }
@@ -149,44 +152,48 @@ class BoardController {
 
   void pointerUp(PointerUpEvent event) async {
     if (selectedTiles.length > 1) {
-      var sequence = true;
-      var sequenceInverse = true;
+      //var sequence = false;
+      //var sequenceInverse = false;
       var sequenceCount = 0;
       var match = true;
       for (var i = 0; i < selectedTiles.length - 1; i++) {
         var num = tiles[selectedTiles.elementAt(i)].number;
         var next = tiles[selectedTiles.elementAt(i + 1)].number;
 
-        if (num != next + 1) {
-          sequence = false;
+        if (num == next + 1) {
+          //  sequence = true;
           sequenceCount++;
+        } else {
+          //sequence = false;
+        }
+      }
+      if (sequenceCount != selectedTiles.length - 1) {
+        sequenceCount = 0;
+        for (var i = 0; i < selectedTiles.length - 1; i++) {
+          var num = tiles[selectedTiles.elementAt(i)].number;
+          var next = tiles[selectedTiles.elementAt(i + 1)].number;
+
+          if (num == next - 1) {
+            //sequenceInverse = true;
+            sequenceCount++;
+          } else {
+            //sequenceInverse = false;
+          }
         }
       }
       for (var i = 0; i < selectedTiles.length - 1; i++) {
         var num = tiles[selectedTiles.elementAt(i)].number;
         var next = tiles[selectedTiles.elementAt(i + 1)].number;
 
-        if (num != next - 1) {
-          sequenceInverse = false;
-          sequenceCount++;
+        if (num != next) {
+          match = false;
         }
       }
-      if (!sequence && !sequenceInverse) {
-        for (var i = 0; i < selectedTiles.length - 1; i++) {
-          var num = tiles[selectedTiles.elementAt(i)].number;
-          var next = tiles[selectedTiles.elementAt(i + 1)].number;
 
-          if (num != next) {
-            match = false;
-          }
-        }
-      } else {
-        match = false;
-      }
-
-      if (match || sequence || sequenceInverse) {
+      if (match || sequenceCount == selectedTiles.length - 1) {
         for (var i = 0; i < selectedTiles.length; i++) {
-          tiles[selectedTiles.elementAt(i)] = tiles[selectedTiles.elementAt(i)].dispose();
+          tiles[selectedTiles.elementAt(i)] =
+              tiles[selectedTiles.elementAt(i)].dispose();
         }
         if (!isMuted) blopPlayer = await audioCache?.play('blop.mp3');
       }
@@ -196,7 +203,7 @@ class BoardController {
       } else if (sequenceCount > BoardConsts().sequenceBonus) {
         score += (BoardConsts().sequenceBonusScore * selectedTiles.length);
         bonusTime = BoardConsts().bonusGap;
-      } else if (sequence || sequenceInverse) {
+      } else if (sequenceCount == selectedTiles.length - 1) {
         score += (BoardConsts().sequenceScore * selectedTiles.length);
       }
     }

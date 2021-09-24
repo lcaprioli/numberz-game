@@ -28,9 +28,7 @@ class ChiefDecoration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      right: 20,
-      bottom: 0,
+    return SizedBox(
       width: MediaQuery.of(context).size.width / 4,
       child: Image.asset(
         'assets/images/greek.png',
