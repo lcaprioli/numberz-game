@@ -145,11 +145,13 @@ class _BoardScreenState extends State<BoardScreen> {
                                 counter: controller.totalTime,
                                 amount: BoardConsts().gameTime,
                                 title: 'Time left',
+                                color: Colors.yellow,
                               ),
                               Clock(
                                 counter: controller.burnTime,
                                 amount: BoardConsts().timeGap,
                                 title: 'Burn',
+                                color: Color(0xffd75509),
                               ),
                             ],
                           ),

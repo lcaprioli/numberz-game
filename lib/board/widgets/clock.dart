@@ -6,11 +6,13 @@ class Clock extends StatelessWidget {
     required this.counter,
     required this.amount,
     required this.title,
+    required this.color,
   });
 
   final int counter;
   final int amount;
   final String title;
+  final Color color;
   @override
   Widget build(BuildContext context) {
     final _size = 70.0;
@@ -66,7 +68,7 @@ class Clock extends StatelessWidget {
                       child: Container(
                         width: _halfSize,
                         height: _halfSize,
-                        color: Color(0xffd75509),
+                        color: color,
                       ),
                     ),
                   ),
@@ -81,7 +83,7 @@ class Clock extends StatelessWidget {
                       child: Container(
                         width: _halfSize,
                         height: _halfSize,
-                        color: Color(0xffd75509),
+                        color: color,
                       ),
                     ),
                   ),
@@ -96,7 +98,7 @@ class Clock extends StatelessWidget {
                       child: Container(
                         width: _halfSize,
                         height: _halfSize,
-                        color: Color(0xffd75509),
+                        color: color,
                       ),
                     ),
                   ),
@@ -111,7 +113,7 @@ class Clock extends StatelessWidget {
                       child: Container(
                         width: _halfSize,
                         height: _halfSize,
-                        color: Color(0xffd75509),
+                        color: color,
                       ),
                     ),
                   ),
