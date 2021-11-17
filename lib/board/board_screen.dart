@@ -1,18 +1,15 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:numbers/board/widgets/sound_button.dart';
-import 'package:numbers/game_over/game_over.dart';
+import 'package:numbers/board/widgets/tile.dart';
 import 'package:numbers/shared/templates/main_body.dart';
 
-import '../main.dart';
+import 'models/tile_model.dart';
 import 'widgets/clock.dart';
 import 'board_consts.dart';
 import 'board_controller.dart';
-import 'models/tile_model.dart';
-import 'board_widget.dart';
 import 'widgets/decoration.dart';
 import 'widgets/score.dart';
 
@@ -32,7 +29,7 @@ class BoardScreen extends StatefulWidget {
 
 class _BoardScreenState extends State<BoardScreen> {
   late BoardController controller;
-  late Timer _refresh;
+
   late Timer _timer;
 
   late AudioCache audioCache;
@@ -44,28 +41,52 @@ class _BoardScreenState extends State<BoardScreen> {
   void initState() {
     audioCache = AudioCache(prefix: "assets/audio/");
 
+    int _width =
+        widget.isMobile ? BoardConsts.mobileWidth : BoardConsts.desktopWidth;
+
+    int _height =
+        widget.isMobile ? BoardConsts.mobileHeight : BoardConsts.desktopHeight;
     controller = BoardController(
-      widget.isMobile ? BoardConsts.mobileWidth : BoardConsts.desktopWidth,
-      widget.isMobile ? BoardConsts.mobileHeight : BoardConsts.desktopHeight,
+      _width,
+      _height,
       audioCache: audioCache,
+      //     updateScreen: _updateScreen,
+      /* stateAction: (List<Point> points) {
+        for (var i = 0; i < points.length; i++) {
+          setState(() {
+            controller.columns[points[i].x][points[i].y].disposed = true;
+          });
+          setState(() {
+            controller.columns[points[i].x].add(TileModel(
+              customKey: GlobalKey(),
+              number: Random().nextInt(999),
+              point: Point(i, 0),
+            ));
+            controller.columns[points[i].x].removeAt(points[i].y);
+            for (var a = points[i].y; a < controller.columns[points[i].x].length; a++) {
+              controller.columns[points[i].x][a].point.y =
+                  controller.columns[points[i].x][a].point.y - 1;
+            }
+          });
+        }
+      }, */
     );
-    controller.tiles = List.generate(
-      controller.width * controller.height,
-      (index) => TileModel(
-        key: GlobalKey(),
-        number: Random().nextInt(5) + 1,
-      ),
-    );
+    /*    for (var i = 0; i < _width; i++) {
+      GlobalKey<AnimatedListState> ckey = GlobalKey<AnimatedListState>();
+      _listState.add(ckey);
+    }
+  */
     controller.setInitial();
-    _refresh = Timer.periodic(Duration(milliseconds: 150), (t) {
-      setState(() {
+
+    /*  _refresh = Timer.periodic(Duration(milliseconds: 150), (t) {
+       setState(() {
         controller.moveDown(t);
       });
-
+ 
       _clockAlarm = !_clockAlarm;
-    });
-    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
-      if (controller.totalTime > 0) {
+    });*/
+    /*s _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+           if (controller.totalTime > 0) {
         controller.reduceTimer();
       } else {
         if (bestScore < controller.score) {
@@ -81,7 +102,7 @@ class _BoardScreenState extends State<BoardScreen> {
         );
         _timer.cancel();
       }
-    });
+    }); */
 
     super.initState();
   }
@@ -90,9 +111,23 @@ class _BoardScreenState extends State<BoardScreen> {
   void dispose() {
     _timer.cancel();
 
-    _refresh.cancel();
+    //_refresh.cancel();
     super.dispose();
   }
+
+/*   Widget _tileitem(int column, int row, int index) {
+    TileModel item = controller.columns[column].value[row];
+    return Tile(
+      tile: item,
+      index: index,
+    );
+  }
+ */
+  /*  void _updateScreen() {
+    setState(() {
+      controller.columns = controller.columns;
+    });
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -110,14 +145,57 @@ class _BoardScreenState extends State<BoardScreen> {
                     padding: EdgeInsets.all(30.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
+                          height: (controller.height) * 85,
+                          width: (controller.width) * 85,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(25),
                           ),
-                          child: BoardWidget(controller: controller),
-                        ),
+                          padding: EdgeInsets.all(15),
+                          child: Listener(
+                            onPointerMove: controller.pointerDown,
+                            onPointerUp: controller.pointerUp,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(controller.columns.length,
+                                  (columnIndex) {
+                                return Container(
+                                  height: (BoardConsts.tileSize *
+                                          controller.height) +
+                                      ((controller.height) * 5),
+                                  width: BoardConsts.tileSize + 5,
+                                  child: Stack(
+                                    children: List.generate(
+                                      controller
+                                          .columns[columnIndex].value.length,
+                                      (index) => ValueListenableBuilder<
+                                              List<TileModel>>(
+                                          valueListenable:
+                                              controller.columns[columnIndex],
+                                          builder: (_, list, __) {
+                                            return Tile(
+                                              tile: list[index],
+                                              index: index,
+                                            );
+                                          }),
+                                    ),
+                                  ),
+                                ); /* [
+                                Container(
+                                  margin: EdgeInsets.all(15),
+                                  width: 50,
+                                  height: (controller.height * 2) * 50,
+                                  color: Colors.green,
+                                ),
+                              ],
+                            */
+                              }),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -207,4 +285,19 @@ class _BoardScreenState extends State<BoardScreen> {
       ),
     );
   }
+
+  /*  Widget _buildFadeAndSizeTransitioningTile({
+    required Animation<double> anim,
+    required int column,
+    required int row,
+  }) {
+    return FadeTransition(
+      opacity: anim,
+      child: SizeTransition(
+        sizeFactor: anim,
+        axisAlignment: 0.0,
+        child: _tileitem(column, row),
+      ),
+    );
+  } */
 }

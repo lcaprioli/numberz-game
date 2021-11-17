@@ -9,32 +9,28 @@ import '../board_consts.dart';
 class Tile extends StatefulWidget {
   Tile({
     required this.tile,
+    required this.index,
   });
 
   final TileModel tile;
+  final int index;
 
   @override
   _TileState createState() => _TileState();
 }
 
 class _TileState extends State<Tile> {
-  double _burnStep = 0.0;
-
   @override
   Widget build(BuildContext context) {
-    if (widget.tile.burned) {
-      _burnStep = _burnStep + 0.25;
-    } else {
-      _burnStep = 0.0;
-    }
-    return Container(
-      key: widget.tile.key,
-      height: 50,
-      width: 50,
-      margin: EdgeInsets.all(5),
-      child: AnimatedOpacity(
-        duration: Duration(milliseconds: 355),
-        opacity: widget.tile.burned ? 0.25 : 1,
+    return AnimatedPositioned(
+      curve: Curves.bounceInOut,
+      duration: const Duration(milliseconds: 500),
+      key: widget.tile.customKey,
+      bottom: (widget.index * BoardConsts.tileSize) + widget.index * 5,
+      child: Container(
+        margin: EdgeInsets.all(5),
+        height: BoardConsts.tileSize,
+        width: BoardConsts.tileSize,
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
@@ -77,17 +73,20 @@ class _TileState extends State<Tile> {
                     ),
                   ),
                   Center(
-                    child: FittedBox(
-                      child: Text(
-                        '${widget.tile.disposed ? '' : widget.tile.number}',
-                        style: GoogleFonts.gfsNeohellenic(
-                          textStyle: TextStyle(
-                            color: widget.tile.hasHit
-                                ? Colors.amber
-                                : BoardConsts.fontColors
-                                    .elementAt(widget.tile.number - 1),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 36.0,
+                    child: Visibility(
+                      visible: !widget.tile.disposed,
+                      child: FittedBox(
+                        child: Text(
+                          '${widget.tile.disposed ? '' : widget.tile.number}',
+                          style: GoogleFonts.gfsNeohellenic(
+                            textStyle: TextStyle(
+                              color: widget.tile.hasHit
+                                  ? Colors.amber
+                                  : BoardConsts.fontColors
+                                      .elementAt(widget.tile.number - 1),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 36.0,
+                            ),
                           ),
                         ),
                       ),
