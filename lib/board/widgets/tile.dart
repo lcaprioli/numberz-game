@@ -23,8 +23,8 @@ class _TileState extends State<Tile> {
   @override
   Widget build(BuildContext context) {
     return AnimatedPositioned(
-      curve: Curves.bounceInOut,
-      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOutCubicEmphasized,
+      duration: const Duration(milliseconds: 1200),
       key: widget.tile.customKey,
       bottom: (widget.index * BoardConsts.tileSize) + widget.index * 5,
       child: Container(

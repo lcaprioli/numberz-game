@@ -33,7 +33,7 @@ class BoardController {
 
   List<List<TileModel>> tiles = [];
   List<Set<int>> selectedTiles = List.generate(9, (index) => <int>{});
-
+  List<Point> selectedPoints = [];
   List<ValueNotifier<List<TileModel>>> columns = [];
 
   int score = 0;
@@ -170,7 +170,11 @@ class BoardController {
         final result = BoxHitTestResult();
         Offset localRed = box.globalToLocal(event.position);
         if (box.hitTest(result, position: localRed)) {
+          var _columnLength = selectedTiles[i].length;
           selectedTiles[i].add(a);
+          if (selectedTiles[i].length > _columnLength) {
+            selectedPoints.add(Point(i, a));
+          }
           columns[i].value[a] = columns[i].value[a].hit();
 
           //selectedTiles.add(columns[i].value[a].customKey);
@@ -187,18 +191,82 @@ class BoardController {
 
   void pointerUp(PointerUpEvent event) async {
     //return;
+
+    if (selectedPoints.length > 1) {
+      var sequence = false;
+      var sequenceInverse = false;
+      var sequenceCount = 0;
+      var match = true;
+
+      for (var i = 0; i < selectedPoints.length - 1; i++) {
+        var pos = selectedPoints[i];
+
+        var num = columns[pos.column].value[pos.row].number;
+        var pos2 = selectedPoints[i + 1];
+        var next = columns[pos2.column].value[pos2.row].number;
+
+        if (num == next + 1) {
+          sequence = true;
+          sequenceCount++;
+        } else {
+          sequence = false;
+        }
+      }
+      if (sequenceCount != selectedPoints.length - 1) {
+        sequenceCount = 0;
+        for (var i = 0; i < selectedPoints.length - 1; i++) {
+          var pos = selectedPoints[i];
+          var num = columns[pos.column].value[pos.row].number;
+          var pos2 = selectedPoints[i + 1];
+          var next = columns[pos2.column].value[pos2.row].number;
+
+          if (num == next - 1) {
+            sequenceInverse = true;
+            sequenceCount++;
+          } else {
+            sequenceInverse = false;
+          }
+        }
+      }
+      for (var i = 0; i < selectedPoints.length - 1; i++) {
+        var pos = selectedPoints[i];
+        var num = columns[pos.column].value[pos.row].number;
+        var pos2 = selectedPoints[i + 1];
+        var next = columns[pos2.column].value[pos2.row].number;
+
+        if (num != next) {
+          match = false;
+        }
+      }
+
+      if (match || sequenceCount == selectedPoints.length - 1) {
+        removeSelected();
+        if (!isMuted) blopPlayer = await audioCache?.play('blop.mp3');
+      }
+
+      if (match) {
+        score += (BoardConsts().matchScore * selectedPoints.length);
+      } else if (sequenceCount > BoardConsts().sequenceBonus) {
+        score += (BoardConsts().sequenceBonusScore * selectedPoints.length);
+        bonusTime = BoardConsts().bonusGap;
+      } else if (sequenceCount == selectedPoints.length - 1) {
+        score += (BoardConsts().sequenceScore * selectedPoints.length);
+      }
+    }
+
+    selectedPoints = [];
+    selectedTiles = List.generate(9, (index) => <int>{});
     for (var a = 0; a < width; a++) {
       for (var x = 0; x < columns[a].value.length; x++) {
         columns[a].value[x] = columns[a].value[x].unHit();
       }
     }
     for (var i = 0; i < selectedTiles.length; i++) {
-      if (selectedTiles[i].length > 0) {
-        columns[i].value = List.from(columns[i].value);
-      }
+      columns[i].value = List.from(columns[i].value);
     }
-//    updateScreen();
+  }
 
+  void removeSelected() {
     for (var i = 0; i < selectedTiles.length; i++) {
       final _deleteList = selectedTiles[i].toList();
       _deleteList.sort((a, b) => b.compareTo(a));
@@ -234,13 +302,11 @@ class BoardController {
 
       //columns[_column].removeAt(_row);
     }
-    selectedTiles = List.generate(9, (index) => <int>{});
-    //updateScreen();
   }
 
-/* 
-  void pointerUpp(PointerUpEvent event) async {
-    if (selectedTiles.length > 1) {
+  /*
+void pointerUpp(PointerUpEvent event) async {
+   if (selectedTiles.length > 1) {
        var sequence = false;
        var sequenceInverse = false;
       var sequenceCount = 0;
@@ -248,11 +314,11 @@ class BoardController {
 
       for (var i = 0; i < selectedTiles.length - 1; i++) {
         var pos = selectedTiles.elementAt(i);
-        removeAction(pos.x, pos.y);
+        removeAction(pos.column, pos.row);
 
-        var num = tiles[pos.x][pos.y].number;
+        var num = tiles[poscolumncolumn]rowpos.row].number;
         var pos2 = selectedTiles.elementAt(i + 1);
-        var next = tiles[pos2.x][pos2.y].number;
+        var next = tiles[pos2.column][pos2.row].number;
 
         if (num == next + 1) {
              sequence = true;
@@ -265,9 +331,9 @@ class BoardController {
         sequenceCount = 0;
         for (var i = 0; i < selectedTiles.length - 1; i++) {
           var pos = selectedTiles.elementAt(i);
-          var num = tiles[pos.x][pos.y].number;
+          var num = tiles[pos.column][pos.row].number;
           var pos2 = selectedTiles.elementAt(i + 1);
-          var next = tiles[pos2.x][pos2.y].number;
+          var next = tiles[pos2.column][pos2.row].number;
 
           if (num == next - 1) {
              sequenceInverse = true;
@@ -279,9 +345,9 @@ class BoardController {
       }
       for (var i = 0; i < selectedTiles.length - 1; i++) {
         var pos = selectedTiles.elementAt(i);
-        var num = tiles[pos.x][pos.y].number;
+        var num = tiles[pos.column][pos.row].number;
         var pos2 = selectedTiles.elementAt(i + 1);
-        var next = tiles[pos2.x][pos2.y].number;
+        var next = tiles[pos2.column][pos2.row].number;
 
         if (num != next) {
           match = false;
@@ -294,9 +360,9 @@ class BoardController {
 
               tiles[selectedTiles.elementAt(i)] =
               tiles[selectedTiles.elementAt(i)].dispose();  
-           removeItem(Point(pos.x, pos.y));
+           removeItem(Point(pos.column, pos.row));
         }
-        if (!isMuted) blopPlayer = await audioCache?.play('blop.mp3');
+        if (!isMuted) blopPlayer =columnawait arowdioCache?.play('blop.mp3');
       }
 
       if (match) {
@@ -314,8 +380,8 @@ class BoardController {
         tiles[i][a] = tiles[i][a].unHit();
       }
     }
-  }
- */
+  } */
+
 /*   void removeItem(Point point) {
     tiles[point.x].removeAt(point.y);
     //  removeAction(point);
