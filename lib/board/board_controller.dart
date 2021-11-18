@@ -15,23 +15,20 @@ class BoardController {
     this.width,
     this.height, {
     required this.audioCache,
-    //  required this.updateScreen,
   });
 
   final int width;
   final int height;
   final AudioCache? audioCache;
-  // final StateFunction selectTileFunction;
-  //final StateFunction burnTilesFunction;
-//  final VoidCallback updateScreen;
-  int burnTime = BoardConsts().timeGap;
-  int totalTime = BoardConsts().gameTime;
+
+  final burnTime = ValueNotifier<int>(BoardConsts().timeGap);
+  final totalTime = ValueNotifier<int>(BoardConsts().gameTime);
+
   int bonusTime = 0;
 
   AudioPlayer? fryPlayer;
   AudioPlayer? blopPlayer;
 
-  List<List<TileModel>> tiles = [];
   List<Set<int>> selectedTiles = List.generate(9, (index) => <int>{});
   List<Point> selectedPoints = [];
   List<ValueNotifier<List<TileModel>>> columns = [];
@@ -67,21 +64,21 @@ class BoardController {
     if (bonusTime > 0) {
       bonusTime = bonusTime - 1;
     } else {
-      if (burnTime == 0) {
-        decrease();
-        burnTime = BoardConsts().timeGap;
+      if (burnTime.value == 0) {
+        //decrease();
+        burnTime.value = BoardConsts().timeGap;
         round++;
         if (round % BoardConsts().levelScale == 0) {
           level++;
         }
       } else {
-        burnTime = burnTime - 1;
+        burnTime.value = burnTime.value - 1;
       }
-      if (totalTime == 0) {
+      if (totalTime.value == 0) {
         gameOver();
-        totalTime = BoardConsts().gameTime;
+        totalTime.value = BoardConsts().gameTime;
       } else {
-        totalTime = totalTime - 1;
+        totalTime.value = totalTime.value - 1;
       }
     }
   }
@@ -104,24 +101,23 @@ class BoardController {
   }
 
   int combinationCount() {
-    /*   int _matchCount = 0;
+    int _matchCount = 0;
     for (var i = 0; i < width; i++) {
       for (var a = 0; a < height - 1; a++) {
-        if (tiles[i][a].number == tiles[i][a + 1].number) {
+        if (columns[i].value[a].number == columns[i].value[a + 1].number) {
           _matchCount++;
         }
       }
     }
     for (var i = 0; i < height; i++) {
       for (var a = 0; a < width - 1; a++) {
-        if (tiles[a][i].number == tiles[a + 1][i].number) {
+        if (columns[a].value[i].number == columns[a + 1].value[i].number) {
           _matchCount++;
         }
       }
-    } */
+    }
 
-    // return _matchCount;
-    return 3;
+    return _matchCount;
   }
 
   void decrease() async {
@@ -129,8 +125,9 @@ class BoardController {
     var _maxLevel = (level > 2) ? 2 : level;
     for (var i = 0; i < width; i++) {
       for (var a = 0; a < height; a++) {
-        if (tiles[i][a].number < (5 - _maxLevel)) {
-          tiles[i][a] = tiles[i][a].setNumber(tiles[i][a].number + 1);
+        if (columns[i].value[a].number < (5 - _maxLevel)) {
+          columns[i].value[a] =
+              columns[i].value[a].setNumber(columns[i].value[a].number + 1);
         } else {
           _targetTiles.add([i, a]);
         }
@@ -138,10 +135,10 @@ class BoardController {
         while (_targetTiles.length > (_targetCount / 3) * 2) {
           var _randomPick = Random().nextInt(_targetTiles.length);
           if (score >= 10) score = score - 10;
-          tiles[_targetTiles[_randomPick].first]
-                  [_targetTiles[_randomPick].last] =
-              tiles[_targetTiles[_randomPick].first]
-                      [_targetTiles[_randomPick].last]
+          columns[_targetTiles[_randomPick].first]
+                  .value[_targetTiles[_randomPick].last] =
+              columns[_targetTiles[_randomPick].first]
+                  .value[_targetTiles[_randomPick].last]
                   .burn();
           _targetTiles.removeAt(_randomPick);
         }
@@ -149,14 +146,15 @@ class BoardController {
     }
     if (!isMuted) fryPlayer = await audioCache?.play('fry.mp3');
     await Future.delayed(Duration(seconds: 2));
+    var _deleteList = <Set<int>>[];
     for (var i = 0; i < width; i++) {
       for (var a = 0; a < height; a++) {
-        if (tiles[i][a].burned) {
-          tiles[i].removeAt(a);
-          //removeItem(Point(i, a));
+        if (columns[i].value[a].burned) {
+          _deleteList[i].add(a);
         }
       }
     }
+    removeSelected(_deleteList);
   }
 
   void pointerDown(PointerMoveEvent event) async {
@@ -186,15 +184,10 @@ class BoardController {
         columns[i].value = List.from(columns[i].value);
       }
     }
-    // updateScreen();
   }
 
   void pointerUp(PointerUpEvent event) async {
-    //return;
-
     if (selectedPoints.length > 1) {
-      var sequence = false;
-      var sequenceInverse = false;
       var sequenceCount = 0;
       var match = true;
 
@@ -206,10 +199,7 @@ class BoardController {
         var next = columns[pos2.column].value[pos2.row].number;
 
         if (num == next + 1) {
-          sequence = true;
           sequenceCount++;
-        } else {
-          sequence = false;
         }
       }
       if (sequenceCount != selectedPoints.length - 1) {
@@ -221,10 +211,7 @@ class BoardController {
           var next = columns[pos2.column].value[pos2.row].number;
 
           if (num == next - 1) {
-            sequenceInverse = true;
             sequenceCount++;
-          } else {
-            sequenceInverse = false;
           }
         }
       }
@@ -240,7 +227,7 @@ class BoardController {
       }
 
       if (match || sequenceCount == selectedPoints.length - 1) {
-        removeSelected();
+        removeSelected(selectedTiles);
         if (!isMuted) blopPlayer = await audioCache?.play('blop.mp3');
       }
 
@@ -266,21 +253,19 @@ class BoardController {
     }
   }
 
-  void removeSelected() {
-    for (var i = 0; i < selectedTiles.length; i++) {
-      final _deleteList = selectedTiles[i].toList();
+  void removeSelected(List<Set<int>> list) {
+    for (var i = 0; i < list.length; i++) {
+      final _deleteList = list[i].toList();
       _deleteList.sort((a, b) => b.compareTo(a));
-      print(_deleteList);
-      //var _deleteList = selectedTiles[i];
+
       var _newList = columns[i].value;
-      //  var _isReversed = _deleteList.toList().first > _deleteList.toList().last;
-      //   print(_isReversed);
+
       for (var a = 0; a < _deleteList.length; a++) {
         _newList.removeAt(_deleteList[a]);
         _newList.add(
           TileModel(
             customKey: GlobalKey(),
-            number: Random().nextInt(5) + 1,
+            number: spawnReplacement(),
             point: Point(
                 i,
                 columns[i]
@@ -292,21 +277,12 @@ class BoardController {
         );
       }
       columns[i].value = List.from(_newList);
-
-      /* for (var x = _row; x < columns[_column].length; x++) {
-        //      if (!columns[_column][x].disposed)
-        columns[_column][x].point.row = columns[_column][x].point.row - 1;
-      } */
-
-      //columns[_column].removeAt(_points[i].row);
-
-      //columns[_column].removeAt(_row);
     }
   }
 
   /*
 void pointerUpp(PointerUpEvent event) async {
-   if (selectedTiles.length > 1) {
+   if (list.length > 1) {
        var sequence = false;
        var sequenceInverse = false;
       var sequenceCount = 0;

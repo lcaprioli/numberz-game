@@ -4,6 +4,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:numbers/board/widgets/sound_button.dart';
 import 'package:numbers/board/widgets/tile.dart';
+import 'package:numbers/game_over/game_over.dart';
+import 'package:numbers/main.dart';
 import 'package:numbers/shared/templates/main_body.dart';
 
 import 'models/tile_model.dart';
@@ -50,43 +52,11 @@ class _BoardScreenState extends State<BoardScreen> {
       _width,
       _height,
       audioCache: audioCache,
-      //     updateScreen: _updateScreen,
-      /* stateAction: (List<Point> points) {
-        for (var i = 0; i < points.length; i++) {
-          setState(() {
-            controller.columns[points[i].x][points[i].y].disposed = true;
-          });
-          setState(() {
-            controller.columns[points[i].x].add(TileModel(
-              customKey: GlobalKey(),
-              number: Random().nextInt(999),
-              point: Point(i, 0),
-            ));
-            controller.columns[points[i].x].removeAt(points[i].y);
-            for (var a = points[i].y; a < controller.columns[points[i].x].length; a++) {
-              controller.columns[points[i].x][a].point.y =
-                  controller.columns[points[i].x][a].point.y - 1;
-            }
-          });
-        }
-      }, */
     );
-    /*    for (var i = 0; i < _width; i++) {
-      GlobalKey<AnimatedListState> ckey = GlobalKey<AnimatedListState>();
-      _listState.add(ckey);
-    }
-  */
     controller.setInitial();
 
-    /*  _refresh = Timer.periodic(Duration(milliseconds: 150), (t) {
-       setState(() {
-        controller.moveDown(t);
-      });
- 
-      _clockAlarm = !_clockAlarm;
-    });*/
-    /*s _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
-           if (controller.totalTime > 0) {
+    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+      if (controller.totalTime.value > 0) {
         controller.reduceTimer();
       } else {
         if (bestScore < controller.score) {
@@ -102,7 +72,7 @@ class _BoardScreenState extends State<BoardScreen> {
         );
         _timer.cancel();
       }
-    }); */
+    });
 
     super.initState();
   }
@@ -110,24 +80,8 @@ class _BoardScreenState extends State<BoardScreen> {
   @override
   void dispose() {
     _timer.cancel();
-
-    //_refresh.cancel();
     super.dispose();
   }
-
-/*   Widget _tileitem(int column, int row, int index) {
-    TileModel item = controller.columns[column].value[row];
-    return Tile(
-      tile: item,
-      index: index,
-    );
-  }
- */
-  /*  void _updateScreen() {
-    setState(() {
-      controller.columns = controller.columns;
-    });
-  } */
 
   @override
   Widget build(BuildContext context) {
@@ -183,15 +137,7 @@ class _BoardScreenState extends State<BoardScreen> {
                                           }),
                                     ),
                                   ),
-                                ); /* [
-                                Container(
-                                  margin: EdgeInsets.all(15),
-                                  width: 50,
-                                  height: (controller.height * 2) * 50,
-                                  color: Colors.green,
-                                ),
-                              ],
-                            */
+                                );
                               }),
                             ),
                           ),
@@ -219,18 +165,26 @@ class _BoardScreenState extends State<BoardScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Clock(
-                                counter: controller.totalTime,
-                                amount: BoardConsts().gameTime,
-                                title: 'Time left',
-                                color: Colors.yellow,
-                              ),
-                              Clock(
-                                counter: controller.burnTime,
-                                amount: BoardConsts().timeGap,
-                                title: 'Burn',
-                                color: Color(0xffd75509),
-                              ),
+                              ValueListenableBuilder<int>(
+                                  valueListenable: controller.totalTime,
+                                  builder: (_, t, __) {
+                                    return Clock(
+                                      counter: t,
+                                      amount: BoardConsts().gameTime,
+                                      title: 'Time left',
+                                      color: Colors.yellow,
+                                    );
+                                  }),
+                              ValueListenableBuilder<int>(
+                                  valueListenable: controller.burnTime,
+                                  builder: (_, t, __) {
+                                    return Clock(
+                                      counter: t,
+                                      amount: BoardConsts().timeGap,
+                                      title: 'Burn',
+                                      color: Color(0xffd75509),
+                                    );
+                                  }),
                             ],
                           ),
                         ),
