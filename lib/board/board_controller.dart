@@ -72,7 +72,7 @@ class BoardController {
         disabled.value = false;
       }
 
-      if (burnTime.value == 0) {
+      if (burnTime.value == 1) {
         decrease();
         burnTime.value = BoardConsts().timeGap;
         round++;

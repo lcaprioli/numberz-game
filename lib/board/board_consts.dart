@@ -10,7 +10,7 @@ class BoardConsts {
 
   final levelScale = 5;
   final timeGap = 20;
-  final gameTime = 120;
+  final gameTime = 60;
   final bonusGap = 12;
 
   final sequenceBonus = 3;
