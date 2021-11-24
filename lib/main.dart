@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:numbers/board/board_screen.dart';
 import 'package:numbers/splash/splash.dart';
 
 int bestScore = 0;
@@ -17,10 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: BoardScreen(
-        isMobile: false,
-        title: '',
-      ),
+      home: Splash(),
     );
   }
 }

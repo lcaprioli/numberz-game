@@ -59,13 +59,13 @@ class _BoardScreenState extends State<BoardScreen> {
       if (controller.totalTime.value > 0) {
         controller.reduceTimer();
       } else {
-        if (bestScore < controller.score) {
-          bestScore = controller.score;
+        if (bestScore < controller.score.value) {
+          bestScore = controller.score.value;
         }
         Navigator.of(context).pushReplacement(
           MaterialPageRoute<void>(
             builder: (BuildContext context) => GameOver(
-              score: controller.score,
+              score: controller.score.value,
               bestScore: bestScore,
             ),
           ),
@@ -95,63 +95,72 @@ class _BoardScreenState extends State<BoardScreen> {
                 Flexible(
                   flex: 8,
                   fit: FlexFit.tight,
-                  child: Container(
-                    padding: EdgeInsets.all(30.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: (controller.height) * 85,
-                          width: (controller.width) * 85,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                          padding: EdgeInsets.all(15),
-                          child: Listener(
-                            onPointerMove: controller.pointerDown,
-                            onPointerUp: controller.pointerUp,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: List.generate(controller.columns.length,
-                                  (columnIndex) {
-                                return Container(
-                                  height: (BoardConsts.tileSize *
-                                          controller.height) +
-                                      ((controller.height) * 5),
-                                  width: BoardConsts.tileSize + 5,
-                                  child: Stack(
-                                    children: List.generate(
-                                      controller
-                                          .columns[columnIndex].value.length,
-                                      (index) => ValueListenableBuilder<
-                                              List<TileModel>>(
-                                          valueListenable:
-                                              controller.columns[columnIndex],
-                                          builder: (_, list, __) {
-                                            return Tile(
-                                              tile: list[index],
-                                              index: index,
-                                            );
-                                          }),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: (controller.height) * 85,
+                        width: (controller.width) * 85,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        padding: EdgeInsets.all(15),
+                        child: ValueListenableBuilder<bool>(
+                            valueListenable: controller.disabled,
+                            builder: (_, disable, __) {
+                              return Opacity(
+                                opacity: disable ? .78 : 1,
+                                child: IgnorePointer(
+                                  ignoring: disable,
+                                  child: Listener(
+                                    onPointerMove: controller.pointerDown,
+                                    onPointerUp: controller.pointerUp,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: List.generate(
+                                          controller.columns.length,
+                                          (columnIndex) {
+                                        return Container(
+                                          height: (BoardConsts.tileSize *
+                                                  controller.height) +
+                                              ((controller.height) * 5),
+                                          width: BoardConsts.tileSize + 5,
+                                          child: Stack(
+                                            children: List.generate(
+                                              controller.columns[columnIndex]
+                                                  .value.length,
+                                              (index) => ValueListenableBuilder<
+                                                      List<TileModel>>(
+                                                  valueListenable: controller
+                                                      .columns[columnIndex],
+                                                  builder: (_, list, __) {
+                                                    return Tile(
+                                                      tile: list[index],
+                                                      index: index,
+                                                    );
+                                                  }),
+                                            ),
+                                          ),
+                                        );
+                                      }),
                                     ),
                                   ),
-                                );
-                              }),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                                ),
+                              );
+                            }),
+                      )
+                    ],
                   ),
                 ),
                 Flexible(
-                  flex: widget.isMobile ? 1 : 4,
+                  flex: 4,
                   fit: FlexFit.tight,
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 40,
+                    padding: EdgeInsets.only(
+                      top: widget.isMobile ? 10 : 40,
                       left: 40,
                       right: 40,
                     ),
@@ -188,10 +197,14 @@ class _BoardScreenState extends State<BoardScreen> {
                             ],
                           ),
                         ),
-                        Score(
-                          controller.score,
-                          widget.isMobile,
-                        ),
+                        ValueListenableBuilder<int>(
+                            valueListenable: controller.score,
+                            builder: (context, _score, __) {
+                              return Score(
+                                _score,
+                                widget.isMobile,
+                              );
+                            }),
                         Visibility(
                           visible: !widget.isMobile,
                           child: ChiefDecoration(),

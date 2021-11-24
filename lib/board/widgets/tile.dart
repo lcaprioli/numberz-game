@@ -31,78 +31,74 @@ class _TileState extends State<Tile> {
         margin: EdgeInsets.all(5),
         height: BoardConsts.tileSize,
         width: BoardConsts.tileSize,
-        child: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            child: ClipOval(
-              child: Stack(
-                clipBehavior: Clip.antiAlias,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: widget.tile.hasHit
-                          ? Colors.black
-                          : widget.tile.burned
-                              ? Colors.black
-                              : BoardConsts.tileColors
-                                  .elementAt(widget.tile.number - 1),
-                    ),
+        child: ClipOval(
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: widget.tile.hasHit
+                        ? Colors.black
+                        : widget.tile.burned
+                            ? Colors.black
+                            : BoardConsts.tileColors
+                                .elementAt(widget.tile.number - 1),
                   ),
-                  Visibility(
-                    visible: !widget.tile.burned,
-                    child: Positioned(
-                      top: -5,
-                      right: 0,
-                      width: 66,
-                      height: 66,
-                      child: Container(
-                        transform: Matrix4.skewX(.02),
-                        child: ClipOval(
-                          child: ColorFiltered(
-                            colorFilter: ColorFilter.mode(
-                              Colors.white.withOpacity(0.1),
-                              BlendMode.screen,
-                            ),
-                            child: Container(
-                              color: Colors.white.withOpacity(0.1),
-                            ),
+                ),
+                Visibility(
+                  visible: !widget.tile.burned,
+                  child: Positioned(
+                    top: -5,
+                    right: 0,
+                    width: 66,
+                    height: 66,
+                    child: Container(
+                      transform: Matrix4.skewX(.02),
+                      child: ClipOval(
+                        child: ColorFiltered(
+                          colorFilter: ColorFilter.mode(
+                            Colors.white.withOpacity(0.1),
+                            BlendMode.screen,
+                          ),
+                          child: Container(
+                            color: Colors.white.withOpacity(0.1),
                           ),
                         ),
                       ),
                     ),
                   ),
-                  Center(
-                    child: Visibility(
-                      visible: !widget.tile.disposed,
-                      child: FittedBox(
-                        child: Text(
-                          '${widget.tile.disposed ? '' : widget.tile.number}',
-                          style: GoogleFonts.gfsNeohellenic(
-                            textStyle: TextStyle(
-                              color: widget.tile.hasHit
-                                  ? Colors.amber
-                                  : BoardConsts.fontColors
-                                      .elementAt(widget.tile.number - 1),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 36.0,
-                            ),
+                ),
+                Center(
+                  child: Visibility(
+                    visible: !widget.tile.disposed,
+                    child: FittedBox(
+                      child: Text(
+                        '${widget.tile.disposed ? '' : widget.tile.number}',
+                        style: GoogleFonts.gfsNeohellenic(
+                          textStyle: TextStyle(
+                            color: widget.tile.hasHit
+                                ? Colors.amber
+                                : BoardConsts.fontColors
+                                    .elementAt(widget.tile.number - 1),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 36.0,
                           ),
                         ),
                       ),
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(75),
-                      border: Border.all(
-                        color: Color(0xFF3a0d05),
-                        width: 2,
-                      ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(75),
+                    border: Border.all(
+                      color: Color(0xFF3a0d05),
+                      width: 2,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

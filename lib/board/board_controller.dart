@@ -23,17 +23,20 @@ class BoardController {
 
   final burnTime = ValueNotifier<int>(BoardConsts().timeGap);
   final totalTime = ValueNotifier<int>(BoardConsts().gameTime);
+  final disabled = ValueNotifier<bool>(false);
 
   int bonusTime = 0;
 
   AudioPlayer? fryPlayer;
   AudioPlayer? blopPlayer;
 
-  List<Set<int>> selectedTiles = List.generate(9, (index) => <int>{});
+  List<Set<int>> selectedTiles = [];
+  List<Set<int>> expiringTiles = [];
+  List<Set<int>> burnTiles = [];
   List<Point> selectedPoints = [];
   List<ValueNotifier<List<TileModel>>> columns = [];
 
-  int score = 0;
+  final score = ValueNotifier<int>(0);
   int level = 0;
   int round = 0;
   int lastSpawn = Random().nextInt(5) + 1;
@@ -50,22 +53,27 @@ class BoardController {
             point: Point(i, a),
           ),
         );
-
-        //  updateScreen();
-        //insertAction(i);
       }
       columns[i].value = List.from(_tmplist);
-
-      ///    tiles[i] = tiles[i].setNumber(spawnReplacement());
     }
+
+    selectedTiles = List.generate(width, (index) => <int>{});
+    expiringTiles = List.generate(width, (index) => <int>{});
+    burnTiles = List.generate(width, (index) => <int>{});
   }
 
   void reduceTimer() {
     if (bonusTime > 0) {
       bonusTime = bonusTime - 1;
     } else {
+      if (burnTime.value < 1) {
+        disabled.value = true;
+      } else if (burnTime.value > BoardConsts().timeGap - 2) {
+        disabled.value = false;
+      }
+
       if (burnTime.value == 0) {
-        //decrease();
+        decrease();
         burnTime.value = BoardConsts().timeGap;
         round++;
         if (round % BoardConsts().levelScale == 0) {
@@ -84,19 +92,12 @@ class BoardController {
   }
 
   void gameOver() {}
-/* 
-  void moveDown(int column, int row) async {
-    removeAction(column, row);
-    //  await Future.delayed(Duration(seconds: 2));
 
-    insertAction(column);
-  }
- */
   int spawnReplacement() {
     if (combinationCount() < 3) {
       return lastSpawn;
     }
-    lastSpawn = Random().nextInt(5) + 1;
+    lastSpawn = Random().nextInt(4) + 1;
     return lastSpawn;
   }
 
@@ -121,32 +122,51 @@ class BoardController {
   }
 
   void decrease() async {
-    var _targetTiles = <List<int>>[];
-    var _maxLevel = (level > 2) ? 2 : level;
+    //var _targetTiles = <List<int>>[];
     for (var i = 0; i < width; i++) {
       for (var a = 0; a < height; a++) {
-        if (columns[i].value[a].number < (5 - _maxLevel)) {
-          columns[i].value[a] =
-              columns[i].value[a].setNumber(columns[i].value[a].number + 1);
-        } else {
-          _targetTiles.add([i, a]);
-        }
-        var _targetCount = _targetTiles.length;
-        while (_targetTiles.length > (_targetCount / 3) * 2) {
-          var _randomPick = Random().nextInt(_targetTiles.length);
-          if (score >= 10) score = score - 10;
-          columns[_targetTiles[_randomPick].first]
-                  .value[_targetTiles[_randomPick].last] =
-              columns[_targetTiles[_randomPick].first]
-                  .value[_targetTiles[_randomPick].last]
-                  .burn();
-          _targetTiles.removeAt(_randomPick);
+        if (columns[i].value[a].number == 5) {
+          expiringTiles[i].add(a);
+          columns[i].value[a] = columns[i].value[a].burn();
+          if (score.value >= 10) score.value = score.value - 10;
+          //    _targetTiles.add([i, a]);
         }
       }
     }
+
+    for (var i = 0; i < expiringTiles.length; i++) {
+      if (expiringTiles[i].length > 0) {
+        columns[i].value = List.from(columns[i].value);
+      }
+    }
+    // await Future.delayed(Duration(seconds: 1));
+    /*  for (var i = 0; i < expiringTiles.length; i++) {
+      for (var a = 0; a < expiringTiles[i].length; a++) {
+        
+      }
+    }
+        var _targetCount = expiringTiles[i].length;
+        while (expiringTiles[i].length > (_targetCount / 3) * 2) {
+          var _randomPick = Random().nextInt(burnTiles[i].length);
+          columns[burnTiles[i][_randomPick].first]
+                  .value[burnTiles[i][_randomPick].last] =
+              columns[burnTiles[i][_randomPick].first]
+                  .value[burnTiles[i][_randomPick].last]
+                  .burn();
+          burnTiles[i].removeAt(_randomPick);
+        }
+      }
+      }
+    */
+
+    for (var i = 0; i < expiringTiles.length; i++) {
+      if (expiringTiles[i].length > 0) {
+        columns[i].value = List.from(columns[i].value);
+      }
+    }
     if (!isMuted) fryPlayer = await audioCache?.play('fry.mp3');
-    await Future.delayed(Duration(seconds: 2));
-    var _deleteList = <Set<int>>[];
+    await Future.delayed(Duration(seconds: 1));
+    /* var _deleteList = <Set<int>>[];
     for (var i = 0; i < width; i++) {
       for (var a = 0; a < height; a++) {
         if (columns[i].value[a].burned) {
@@ -154,7 +174,20 @@ class BoardController {
         }
       }
     }
-    removeSelected(_deleteList);
+     */
+    for (var i = 0; i < width; i++) {
+      for (var a = 0; a < height; a++) {
+        if (columns[i].value[a].number < 5) {
+          columns[i].value[a] =
+              columns[i].value[a].setNumber(columns[i].value[a].number + 1);
+        }
+      }
+    }
+    removeSelected(expiringTiles);
+    for (var i = 0; i < width; i++) {
+      columns[i].value = List.from(columns[i].value);
+    }
+    expiringTiles = List.generate(width, (index) => <int>{});
   }
 
   void pointerDown(PointerMoveEvent event) async {
@@ -174,8 +207,6 @@ class BoardController {
             selectedPoints.add(Point(i, a));
           }
           columns[i].value[a] = columns[i].value[a].hit();
-
-          //selectedTiles.add(columns[i].value[a].customKey);
         }
       }
     }
@@ -232,17 +263,18 @@ class BoardController {
       }
 
       if (match) {
-        score += (BoardConsts().matchScore * selectedPoints.length);
+        score.value += (BoardConsts().matchScore * selectedPoints.length);
       } else if (sequenceCount > BoardConsts().sequenceBonus) {
-        score += (BoardConsts().sequenceBonusScore * selectedPoints.length);
+        score.value +=
+            (BoardConsts().sequenceBonusScore * selectedPoints.length);
         bonusTime = BoardConsts().bonusGap;
       } else if (sequenceCount == selectedPoints.length - 1) {
-        score += (BoardConsts().sequenceScore * selectedPoints.length);
+        score.value += (BoardConsts().sequenceScore * selectedPoints.length);
       }
     }
 
     selectedPoints = [];
-    selectedTiles = List.generate(9, (index) => <int>{});
+    selectedTiles = List.generate(width, (index) => <int>{});
     for (var a = 0; a < width; a++) {
       for (var x = 0; x < columns[a].value.length; x++) {
         columns[a].value[x] = columns[a].value[x].unHit();

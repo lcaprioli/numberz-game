@@ -20,7 +20,7 @@ class MainBody extends StatelessWidget {
             ),
             Column(
               children: [
-                RowDecoration(),
+                if (!MediaQueryUtils.isMobile(context)) RowDecoration(),
                 content,
                 if (!MediaQueryUtils.isMobile(context)) RowDecoration(),
               ],
