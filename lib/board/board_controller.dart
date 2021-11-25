@@ -39,8 +39,9 @@ class BoardController {
   final score = ValueNotifier<int>(0);
   int level = 0;
   int round = 0;
-  int lastSpawn = Random().nextInt(5) + 1;
+  int lastSpawn = 0;
   bool isMuted = true;
+
   Future<void> setInitial() async {
     for (var i = 0; i < width; i++) {
       columns.add(ValueNotifier<List<TileModel>>([]));
@@ -49,7 +50,7 @@ class BoardController {
         _tmplist.add(
           TileModel(
             customKey: GlobalKey(debugLabel: '$i - $a'),
-            number: Random().nextInt(5) + 1,
+            number: _randNumber(),
             point: Point(i, a),
           ),
         );
@@ -57,9 +58,9 @@ class BoardController {
       columns[i].value = List.from(_tmplist);
     }
 
-    selectedTiles = List.generate(width, (index) => <int>{});
-    expiringTiles = List.generate(width, (index) => <int>{});
-    burnTiles = List.generate(width, (index) => <int>{});
+    selectedTiles = _newEmptyColumn();
+    expiringTiles = _newEmptyColumn();
+    burnTiles = _newEmptyColumn();
   }
 
   void reduceTimer() {
@@ -83,7 +84,6 @@ class BoardController {
         burnTime.value = burnTime.value - 1;
       }
       if (totalTime.value == 0) {
-        gameOver();
         totalTime.value = BoardConsts().gameTime;
       } else {
         totalTime.value = totalTime.value - 1;
@@ -91,13 +91,11 @@ class BoardController {
     }
   }
 
-  void gameOver() {}
-
   int spawnReplacement() {
     if (combinationCount() < 3) {
       return lastSpawn;
     }
-    lastSpawn = Random().nextInt(4) + 1;
+    lastSpawn = _randNumber();
     return lastSpawn;
   }
 
@@ -122,14 +120,12 @@ class BoardController {
   }
 
   void decrease() async {
-    //var _targetTiles = <List<int>>[];
     for (var i = 0; i < width; i++) {
       for (var a = 0; a < height; a++) {
         if (columns[i].value[a].number == 5) {
           expiringTiles[i].add(a);
           columns[i].value[a] = columns[i].value[a].burn();
           if (score.value >= 10) score.value = score.value - 10;
-          //    _targetTiles.add([i, a]);
         }
       }
     }
@@ -139,25 +135,6 @@ class BoardController {
         columns[i].value = List.from(columns[i].value);
       }
     }
-    // await Future.delayed(Duration(seconds: 1));
-    /*  for (var i = 0; i < expiringTiles.length; i++) {
-      for (var a = 0; a < expiringTiles[i].length; a++) {
-        
-      }
-    }
-        var _targetCount = expiringTiles[i].length;
-        while (expiringTiles[i].length > (_targetCount / 3) * 2) {
-          var _randomPick = Random().nextInt(burnTiles[i].length);
-          columns[burnTiles[i][_randomPick].first]
-                  .value[burnTiles[i][_randomPick].last] =
-              columns[burnTiles[i][_randomPick].first]
-                  .value[burnTiles[i][_randomPick].last]
-                  .burn();
-          burnTiles[i].removeAt(_randomPick);
-        }
-      }
-      }
-    */
 
     for (var i = 0; i < expiringTiles.length; i++) {
       if (expiringTiles[i].length > 0) {
@@ -166,15 +143,7 @@ class BoardController {
     }
     if (!isMuted) fryPlayer = await audioCache?.play('fry.mp3');
     await Future.delayed(Duration(seconds: 1));
-    /* var _deleteList = <Set<int>>[];
-    for (var i = 0; i < width; i++) {
-      for (var a = 0; a < height; a++) {
-        if (columns[i].value[a].burned) {
-          _deleteList[i].add(a);
-        }
-      }
-    }
-     */
+
     for (var i = 0; i < width; i++) {
       for (var a = 0; a < height; a++) {
         if (columns[i].value[a].number < 5) {
@@ -187,7 +156,7 @@ class BoardController {
     for (var i = 0; i < width; i++) {
       columns[i].value = List.from(columns[i].value);
     }
-    expiringTiles = List.generate(width, (index) => <int>{});
+    expiringTiles = _newEmptyColumn();
   }
 
   void pointerDown(PointerMoveEvent event) async {
@@ -274,7 +243,7 @@ class BoardController {
     }
 
     selectedPoints = [];
-    selectedTiles = List.generate(width, (index) => <int>{});
+    selectedTiles = _newEmptyColumn();
     for (var a = 0; a < width; a++) {
       for (var x = 0; x < columns[a].value.length; x++) {
         columns[a].value[x] = columns[a].value[x].unHit();
@@ -312,94 +281,6 @@ class BoardController {
     }
   }
 
-  /*
-void pointerUpp(PointerUpEvent event) async {
-   if (list.length > 1) {
-       var sequence = false;
-       var sequenceInverse = false;
-      var sequenceCount = 0;
-      var match = true;
-
-      for (var i = 0; i < selectedTiles.length - 1; i++) {
-        var pos = selectedTiles.elementAt(i);
-        removeAction(pos.column, pos.row);
-
-        var num = tiles[poscolumncolumn]rowpos.row].number;
-        var pos2 = selectedTiles.elementAt(i + 1);
-        var next = tiles[pos2.column][pos2.row].number;
-
-        if (num == next + 1) {
-             sequence = true;
-          sequenceCount++;
-        } else {
-           sequence = false;
-        }
-      }
-      if (sequenceCount != selectedTiles.length - 1) {
-        sequenceCount = 0;
-        for (var i = 0; i < selectedTiles.length - 1; i++) {
-          var pos = selectedTiles.elementAt(i);
-          var num = tiles[pos.column][pos.row].number;
-          var pos2 = selectedTiles.elementAt(i + 1);
-          var next = tiles[pos2.column][pos2.row].number;
-
-          if (num == next - 1) {
-             sequenceInverse = true;
-            sequenceCount++;
-          } else {
-             sequenceInverse = false;
-          }
-        }
-      }
-      for (var i = 0; i < selectedTiles.length - 1; i++) {
-        var pos = selectedTiles.elementAt(i);
-        var num = tiles[pos.column][pos.row].number;
-        var pos2 = selectedTiles.elementAt(i + 1);
-        var next = tiles[pos2.column][pos2.row].number;
-
-        if (num != next) {
-          match = false;
-        }
-      }
-
-      if (match || sequenceCount == selectedTiles.length - 1) {
-        for (var i = 0; i < selectedTiles.length; i++) {
-          var pos = selectedTiles.elementAt(i);
-
-              tiles[selectedTiles.elementAt(i)] =
-              tiles[selectedTiles.elementAt(i)].dispose();  
-           removeItem(Point(pos.column, pos.row));
-        }
-        if (!isMuted) blopPlayer =columnawait arowdioCache?.play('blop.mp3');
-      }
-
-      if (match) {
-        score += (BoardConsts().matchScore * selectedTiles.length);
-      } else if (sequenceCount > BoardConsts().sequenceBonus) {
-        score += (BoardConsts().sequenceBonusScore * selectedTiles.length);
-        bonusTime = BoardConsts().bonusGap;
-      } else if (sequenceCount == selectedTiles.length - 1) {
-        score += (BoardConsts().sequenceScore * selectedTiles.length);
-      }
-    }
-    selectedTiles = {};
-    for (var i = 0; i < width; i++) {
-      for (var a = 0; a < height; a++) {
-        tiles[i][a] = tiles[i][a].unHit();
-      }
-    }
-  } */
-
-/*   void removeItem(Point point) {
-    tiles[point.x].removeAt(point.y);
-    //  removeAction(point);
-    tiles[point.x].insert(
-      tiles[point.x].length,
-      TileModel(
-        key: GlobalKey(),
-        number: spawnReplacement(),
-        point: Point(point.x, tiles[point.x].length),
-      ),
-    );
-  } */
+  List<Set<int>> _newEmptyColumn() => List.generate(width, (index) => <int>{});
+  int _randNumber() => Random().nextInt(5) + 1;
 }
