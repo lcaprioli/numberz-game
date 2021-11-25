@@ -94,64 +94,66 @@ class _BoardScreenState extends State<BoardScreen> {
               children: [
                 Flexible(
                   flex: 8,
-                  fit: FlexFit.tight,
-                  child: Column(
+                  //fit: FlexFit.tight,
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        height: (controller.height) * 85,
-                        width: (controller.width) * 85,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        padding: EdgeInsets.all(15),
-                        child: ValueListenableBuilder<bool>(
-                            valueListenable: controller.disabled,
-                            builder: (_, disable, __) {
-                              return Opacity(
-                                opacity: disable ? .78 : 1,
-                                child: IgnorePointer(
-                                  ignoring: disable,
-                                  child: Listener(
-                                    onPointerMove: controller.pointerDown,
-                                    onPointerUp: controller.pointerUp,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: List.generate(
-                                          controller.columns.length,
-                                          (columnIndex) {
-                                        return Container(
-                                          height: (BoardConsts.tileSize *
-                                                  controller.height) +
-                                              ((controller.height) * 5),
-                                          width: BoardConsts.tileSize + 5,
-                                          child: Stack(
-                                            children: List.generate(
-                                              controller.columns[columnIndex]
-                                                  .value.length,
-                                              (index) => ValueListenableBuilder<
-                                                      List<TileModel>>(
-                                                  valueListenable: controller
-                                                      .columns[columnIndex],
-                                                  builder: (_, list, __) {
-                                                    return Tile(
-                                                      tile: list[index],
-                                                      index: index,
-                                                    );
-                                                  }),
+                      Padding(
+                        padding: const EdgeInsets.all(30.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          padding: EdgeInsets.all(15),
+                          child: ValueListenableBuilder<bool>(
+                              valueListenable: controller.disabled,
+                              builder: (_, disable, __) {
+                                return Opacity(
+                                  opacity: disable ? .78 : 1,
+                                  child: IgnorePointer(
+                                    ignoring: disable,
+                                    child: Listener(
+                                      onPointerMove: controller.pointerDown,
+                                      onPointerUp: controller.pointerUp,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: List.generate(
+                                            controller.columns.length,
+                                            (columnIndex) {
+                                          return Container(
+                                            height: _columnHeight(),
+                                            width: _columnWidth(),
+                                            child: Stack(
+                                              children: List.generate(
+                                                controller.columns[columnIndex]
+                                                    .value.length,
+                                                (index) =>
+                                                    ValueListenableBuilder<
+                                                            List<TileModel>>(
+                                                        valueListenable:
+                                                            controller.columns[
+                                                                columnIndex],
+                                                        builder: (_, list, __) {
+                                                          return Tile(
+                                                            tile: list[index],
+                                                            index: index,
+                                                            isMobile:
+                                                                widget.isMobile,
+                                                          );
+                                                        }),
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      }),
+                                          );
+                                        }),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }),
-                      )
+                                );
+                              }),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -197,14 +199,19 @@ class _BoardScreenState extends State<BoardScreen> {
                             ],
                           ),
                         ),
-                        ValueListenableBuilder<int>(
-                            valueListenable: controller.score,
-                            builder: (context, _score, __) {
-                              return Score(
-                                _score,
-                                widget.isMobile,
-                              );
-                            }),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ValueListenableBuilder<int>(
+                                valueListenable: controller.score,
+                                builder: (context, _score, __) {
+                                  return Score(
+                                    _score,
+                                    widget.isMobile,
+                                  );
+                                }),
+                          ],
+                        ),
                         Visibility(
                           visible: !widget.isMobile,
                           child: ChiefDecoration(),
@@ -253,18 +260,23 @@ class _BoardScreenState extends State<BoardScreen> {
     );
   }
 
-  /*  Widget _buildFadeAndSizeTransitioningTile({
-    required Animation<double> anim,
-    required int column,
-    required int row,
-  }) {
-    return FadeTransition(
-      opacity: anim,
-      child: SizeTransition(
-        sizeFactor: anim,
-        axisAlignment: 0.0,
-        child: _tileitem(column, row),
-      ),
-    );
-  } */
+  double _columnHeight() {
+    return ((widget.isMobile
+                ? BoardConsts.mobileTileSize
+                : BoardConsts.desktopTileSize) *
+            controller.height) +
+        ((controller.height) *
+            (widget.isMobile
+                ? BoardConsts.mobileGridPadding
+                : BoardConsts.desktopGridPadding));
+  }
+
+  double _columnWidth() {
+    return (widget.isMobile
+            ? BoardConsts.mobileTileSize
+            : BoardConsts.desktopTileSize) +
+        (widget.isMobile
+            ? BoardConsts.mobileGridPadding
+            : BoardConsts.desktopGridPadding);
+  }
 }

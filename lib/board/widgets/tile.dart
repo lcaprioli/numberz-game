@@ -10,10 +10,12 @@ class Tile extends StatefulWidget {
   Tile({
     required this.tile,
     required this.index,
+    required this.isMobile,
   });
 
   final TileModel tile;
   final int index;
+  final bool isMobile;
 
   @override
   _TileState createState() => _TileState();
@@ -26,11 +28,21 @@ class _TileState extends State<Tile> {
       curve: Curves.easeInOutCubicEmphasized,
       duration: const Duration(milliseconds: 1200),
       key: widget.tile.customKey,
-      bottom: (widget.index * BoardConsts.tileSize) + widget.index * 5,
-      child: Container(
-        margin: EdgeInsets.all(5),
-        height: BoardConsts.tileSize,
-        width: BoardConsts.tileSize,
+      bottom: (widget.index *
+              (widget.isMobile
+                  ? BoardConsts.mobileTileSize
+                  : BoardConsts.desktopTileSize)) +
+          widget.index *
+              (widget.isMobile
+                  ? BoardConsts.mobileGridPadding
+                  : BoardConsts.desktopGridPadding),
+      child: SizedBox(
+        height: (widget.isMobile
+            ? BoardConsts.mobileTileSize
+            : BoardConsts.desktopTileSize),
+        width: (widget.isMobile
+            ? BoardConsts.mobileTileSize
+            : BoardConsts.desktopTileSize),
         child: ClipOval(
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
@@ -49,10 +61,19 @@ class _TileState extends State<Tile> {
                 Visibility(
                   visible: !widget.tile.burned,
                   child: Positioned(
-                    top: -5,
+                    top: -(widget.isMobile
+                            ? BoardConsts.mobileTileSize
+                            : BoardConsts.desktopTileSize) /
+                        12,
                     right: 0,
-                    width: 66,
-                    height: 66,
+                    width: (widget.isMobile
+                            ? BoardConsts.mobileTileSize
+                            : BoardConsts.desktopTileSize) *
+                        .87,
+                    height: (widget.isMobile
+                            ? BoardConsts.mobileTileSize
+                            : BoardConsts.desktopTileSize) *
+                        .87,
                     child: Container(
                       transform: Matrix4.skewX(.02),
                       child: ClipOval(
