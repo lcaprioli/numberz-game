@@ -6,7 +6,7 @@ class BoardConsts {
   static const desktopWidth = 5;
   static const desktopHeight = 5;
 
-  static const desktopTileSize = 90.0;
+  static const desktopTileSize = 70.0;
   static const mobileTileSize = 65.0;
   static const desktopGridPadding = 10.0;
   static const mobileGridPadding = 7.0;

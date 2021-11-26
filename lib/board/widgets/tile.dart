@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/board/models/tile_model.dart';
+import 'package:numbers/shared/utils/media_query.dart';
 
 import '../board_consts.dart';
 
@@ -31,7 +32,7 @@ class _TileState extends State<Tile> {
       bottom: (widget.index *
               (widget.isMobile
                   ? BoardConsts.mobileTileSize
-                  : BoardConsts.desktopTileSize)) +
+                  : MediaQueryUtils.desktopTileSize(context))) +
           widget.index *
               (widget.isMobile
                   ? BoardConsts.mobileGridPadding
@@ -39,10 +40,10 @@ class _TileState extends State<Tile> {
       child: SizedBox(
         height: (widget.isMobile
             ? BoardConsts.mobileTileSize
-            : BoardConsts.desktopTileSize),
+            : MediaQueryUtils.desktopTileSize(context)),
         width: (widget.isMobile
             ? BoardConsts.mobileTileSize
-            : BoardConsts.desktopTileSize),
+            : MediaQueryUtils.desktopTileSize(context)),
         child: ClipOval(
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
@@ -63,16 +64,16 @@ class _TileState extends State<Tile> {
                   child: Positioned(
                     top: -(widget.isMobile
                             ? BoardConsts.mobileTileSize
-                            : BoardConsts.desktopTileSize) /
+                            : MediaQueryUtils.desktopTileSize(context)) /
                         12,
                     right: 0,
                     width: (widget.isMobile
                             ? BoardConsts.mobileTileSize
-                            : BoardConsts.desktopTileSize) *
+                            : MediaQueryUtils.desktopTileSize(context)) *
                         .87,
                     height: (widget.isMobile
                             ? BoardConsts.mobileTileSize
-                            : BoardConsts.desktopTileSize) *
+                            : MediaQueryUtils.desktopTileSize(context)) *
                         .87,
                     child: Container(
                       transform: Matrix4.skewX(.02),

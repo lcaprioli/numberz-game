@@ -7,6 +7,7 @@ import 'package:numbers/board/widgets/tile.dart';
 import 'package:numbers/game_over/game_over.dart';
 import 'package:numbers/main.dart';
 import 'package:numbers/shared/templates/main_body.dart';
+import 'package:numbers/shared/utils/media_query.dart';
 
 import 'models/tile_model.dart';
 import 'widgets/clock.dart';
@@ -263,7 +264,7 @@ class _BoardScreenState extends State<BoardScreen> {
   double _columnHeight() {
     return ((widget.isMobile
                 ? BoardConsts.mobileTileSize
-                : BoardConsts.desktopTileSize) *
+                : MediaQueryUtils.desktopTileSize(context)) *
             controller.height) +
         ((controller.height) *
             (widget.isMobile
@@ -274,7 +275,7 @@ class _BoardScreenState extends State<BoardScreen> {
   double _columnWidth() {
     return (widget.isMobile
             ? BoardConsts.mobileTileSize
-            : BoardConsts.desktopTileSize) +
+            : MediaQueryUtils.desktopTileSize(context)) +
         (widget.isMobile
             ? BoardConsts.mobileGridPadding
             : BoardConsts.desktopGridPadding);
