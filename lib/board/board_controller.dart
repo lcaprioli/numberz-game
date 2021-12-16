@@ -233,7 +233,7 @@ class BoardController {
 
       if (match) {
         score.value += (BoardConsts().matchScore * selectedPoints.length);
-      } else if (sequenceCount > BoardConsts().sequenceBonus) {
+      } else if (sequenceCount == BoardConsts().sequenceBonus) {
         score.value +=
             (BoardConsts().sequenceBonusScore * selectedPoints.length);
         bonusTime = BoardConsts().bonusGap;

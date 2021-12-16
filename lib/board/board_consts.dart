@@ -12,14 +12,14 @@ class BoardConsts {
   static const mobileGridPadding = 7.0;
 
   final levelScale = 5;
-  final timeGap = 20;
+  final timeGap = 30;
   final gameTime = 60;
-  final bonusGap = 12;
+  final bonusGap = 5;
 
-  final sequenceBonus = 3;
+  final sequenceBonus = 4;
   final matchScore = 10;
-  final sequenceBonusScore = 200;
-  final sequenceScore = 50;
+  final sequenceBonusScore = 100;
+  final sequenceScore = 30;
 
   static Set<Color> tileColors = {
     Color(0xffef9d1e),
