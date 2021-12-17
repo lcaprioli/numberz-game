@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 
 class BoardConsts {
-  static const mobileWidth = 5;
-  static const mobileHeight = 6;
-  static const desktopWidth = 11;
-  static const desktopHeight = 6;
+  static const mobileWidth = 4;
+  static const mobileHeight = 5;
+  static const desktopWidth = 5;
+  static const desktopHeight = 5;
+
+  static const desktopTileSize = 70.0;
+  static const mobileTileSize = 65.0;
+  static const desktopGridPadding = 10.0;
+  static const mobileGridPadding = 7.0;
 
   final levelScale = 5;
-  final timeGap = 20;
-  final gameTime = 120;
-  final bonusGap = 12;
+  final timeGap = 30;
+  final gameTime = 60;
+  final bonusGap = 5;
 
-  final sequenceBonus = 3;
+  final sequenceBonus = 4;
   final matchScore = 10;
-  final sequenceBonusScore = 200;
-  final sequenceScore = 50;
+  final sequenceBonusScore = 100;
+  final sequenceScore = 30;
 
   static Set<Color> tileColors = {
     Color(0xffef9d1e),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/board/board_screen.dart';
-import 'package:numbers/board/widgets/decoration.dart';
 import 'package:numbers/shared/templates/colors.dart';
 import 'package:numbers/shared/templates/main_body.dart';
 import 'package:numbers/shared/utils/media_query.dart';

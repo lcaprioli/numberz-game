@@ -1,18 +1,18 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:numbers/board/widgets/sound_button.dart';
+import 'package:numbers/board/widgets/tile.dart';
 import 'package:numbers/game_over/game_over.dart';
+import 'package:numbers/main.dart';
 import 'package:numbers/shared/templates/main_body.dart';
+import 'package:numbers/shared/utils/media_query.dart';
 
-import '../main.dart';
+import 'models/tile_model.dart';
 import 'widgets/clock.dart';
 import 'board_consts.dart';
 import 'board_controller.dart';
-import 'models/tile_model.dart';
-import 'board_widget.dart';
 import 'widgets/decoration.dart';
 import 'widgets/score.dart';
 
@@ -32,7 +32,7 @@ class BoardScreen extends StatefulWidget {
 
 class _BoardScreenState extends State<BoardScreen> {
   late BoardController controller;
-  late Timer _refresh;
+
   late Timer _timer;
 
   late AudioCache audioCache;
@@ -44,37 +44,29 @@ class _BoardScreenState extends State<BoardScreen> {
   void initState() {
     audioCache = AudioCache(prefix: "assets/audio/");
 
+    int _width =
+        widget.isMobile ? BoardConsts.mobileWidth : BoardConsts.desktopWidth;
+
+    int _height =
+        widget.isMobile ? BoardConsts.mobileHeight : BoardConsts.desktopHeight;
     controller = BoardController(
-      widget.isMobile ? BoardConsts.mobileWidth : BoardConsts.desktopWidth,
-      widget.isMobile ? BoardConsts.mobileHeight : BoardConsts.desktopHeight,
+      _width,
+      _height,
       audioCache: audioCache,
     );
-    controller.tiles = List.generate(
-      controller.width * controller.height,
-      (index) => TileModel(
-        key: GlobalKey(),
-        number: Random().nextInt(5) + 1,
-      ),
-    );
     controller.setInitial();
-    _refresh = Timer.periodic(Duration(milliseconds: 150), (t) {
-      setState(() {
-        controller.moveDown(t);
-      });
 
-      _clockAlarm = !_clockAlarm;
-    });
     _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
-      if (controller.totalTime > 0) {
+      if (controller.totalTime.value > 0) {
         controller.reduceTimer();
       } else {
-        if (bestScore < controller.score) {
-          bestScore = controller.score;
+        if (bestScore < controller.score.value) {
+          bestScore = controller.score.value;
         }
         Navigator.of(context).pushReplacement(
           MaterialPageRoute<void>(
             builder: (BuildContext context) => GameOver(
-              score: controller.score,
+              score: controller.score.value,
               bestScore: bestScore,
             ),
           ),
@@ -89,8 +81,6 @@ class _BoardScreenState extends State<BoardScreen> {
   @override
   void dispose() {
     _timer.cancel();
-
-    _refresh.cancel();
     super.dispose();
   }
 
@@ -105,29 +95,75 @@ class _BoardScreenState extends State<BoardScreen> {
               children: [
                 Flexible(
                   flex: 8,
-                  fit: FlexFit.tight,
-                  child: Container(
-                    padding: EdgeInsets.all(30.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
+                  //fit: FlexFit.tight,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(30.0),
+                        child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(25),
                           ),
-                          child: BoardWidget(controller: controller),
+                          padding: EdgeInsets.all(15),
+                          child: ValueListenableBuilder<bool>(
+                              valueListenable: controller.disabled,
+                              builder: (_, disable, __) {
+                                return Opacity(
+                                  opacity: disable ? .78 : 1,
+                                  child: IgnorePointer(
+                                    ignoring: disable,
+                                    child: Listener(
+                                      onPointerMove: controller.pointerDown,
+                                      onPointerUp: controller.pointerUp,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: List.generate(
+                                            controller.columns.length,
+                                            (columnIndex) {
+                                          return Container(
+                                            height: _columnHeight(),
+                                            width: _columnWidth(),
+                                            child: Stack(
+                                              children: List.generate(
+                                                controller.columns[columnIndex]
+                                                    .value.length,
+                                                (index) =>
+                                                    ValueListenableBuilder<
+                                                            List<TileModel>>(
+                                                        valueListenable:
+                                                            controller.columns[
+                                                                columnIndex],
+                                                        builder: (_, list, __) {
+                                                          return Tile(
+                                                            tile: list[index],
+                                                            index: index,
+                                                            isMobile:
+                                                                widget.isMobile,
+                                                          );
+                                                        }),
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 Flexible(
-                  flex: widget.isMobile ? 1 : 4,
+                  flex: 4,
                   fit: FlexFit.tight,
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 40,
+                    padding: EdgeInsets.only(
+                      top: widget.isMobile ? 10 : 40,
                       left: 40,
                       right: 40,
                     ),
@@ -141,24 +177,41 @@ class _BoardScreenState extends State<BoardScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Clock(
-                                counter: controller.totalTime,
-                                amount: BoardConsts().gameTime,
-                                title: 'Time left',
-                                color: Colors.yellow,
-                              ),
-                              Clock(
-                                counter: controller.burnTime,
-                                amount: BoardConsts().timeGap,
-                                title: 'Burn',
-                                color: Color(0xffd75509),
-                              ),
+                              ValueListenableBuilder<int>(
+                                  valueListenable: controller.totalTime,
+                                  builder: (_, t, __) {
+                                    return Clock(
+                                      counter: t,
+                                      amount: BoardConsts().gameTime,
+                                      title: 'Time left',
+                                      color: Colors.yellow,
+                                    );
+                                  }),
+                              ValueListenableBuilder<int>(
+                                  valueListenable: controller.burnTime,
+                                  builder: (_, t, __) {
+                                    return Clock(
+                                      counter: t,
+                                      amount: BoardConsts().timeGap,
+                                      title: 'Burn',
+                                      color: Color(0xffd75509),
+                                    );
+                                  }),
                             ],
                           ),
                         ),
-                        Score(
-                          controller.score,
-                          widget.isMobile,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ValueListenableBuilder<int>(
+                                valueListenable: controller.score,
+                                builder: (context, _score, __) {
+                                  return Score(
+                                    _score,
+                                    widget.isMobile,
+                                  );
+                                }),
+                          ],
                         ),
                         Visibility(
                           visible: !widget.isMobile,
@@ -206,5 +259,25 @@ class _BoardScreenState extends State<BoardScreen> {
         ),
       ),
     );
+  }
+
+  double _columnHeight() {
+    return ((widget.isMobile
+                ? BoardConsts.mobileTileSize
+                : MediaQueryUtils.desktopTileSize(context)) *
+            controller.height) +
+        ((controller.height) *
+            (widget.isMobile
+                ? BoardConsts.mobileGridPadding
+                : BoardConsts.desktopGridPadding));
+  }
+
+  double _columnWidth() {
+    return (widget.isMobile
+            ? BoardConsts.mobileTileSize
+            : MediaQueryUtils.desktopTileSize(context)) +
+        (widget.isMobile
+            ? BoardConsts.mobileGridPadding
+            : BoardConsts.desktopGridPadding);
   }
 }
