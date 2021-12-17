@@ -184,7 +184,7 @@ class _BoardScreenState extends State<BoardScreen> {
                                       counter: t,
                                       amount: BoardConsts().gameTime,
                                       title: 'Time left',
-                                      color: Colors.yellow,
+                                      color: Colors.yellow.shade800,
                                     );
                                   }),
                               ValueListenableBuilder<int>(

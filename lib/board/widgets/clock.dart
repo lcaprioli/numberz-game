@@ -47,89 +47,122 @@ class Clock extends StatelessWidget {
     }
     return Column(
       children: [
-        SizedBox(
-          width: _size,
-          height: _size,
-          child: ClipOval(
-            child: Stack(
-              children: [
-                Container(
-                  width: _size,
-                  height: _size,
-                  color: Colors.black,
-                ),
-                Visibility(
-                  visible: quart1,
-                  child: Align(
-                    alignment: Alignment(1, -1),
-                    child: Transform(
-                      transform: matrix1,
-                      origin: Offset(0, _halfSize),
-                      child: Container(
-                        width: _halfSize,
-                        height: _halfSize,
-                        color: color,
-                      ),
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: quart2,
-                  child: Align(
-                    alignment: Alignment(1, 1),
-                    child: Transform(
-                      transform: matrix2,
-                      origin: Offset(0, 0),
-                      child: Container(
-                        width: _halfSize,
-                        height: _halfSize,
-                        color: color,
-                      ),
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: quart3,
-                  child: Align(
-                    alignment: Alignment(-1, 1),
-                    child: Transform(
-                      transform: matrix3,
-                      origin: Offset(_halfSize, 0),
-                      child: Container(
-                        width: _halfSize,
-                        height: _halfSize,
-                        color: color,
-                      ),
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: quart4,
-                  child: Align(
-                    alignment: Alignment(-1, -1),
-                    child: Transform(
-                      transform: matrix4,
-                      origin: Offset(_halfSize, _halfSize),
-                      child: Container(
-                        width: _halfSize,
-                        height: _halfSize,
-                        color: color,
-                      ),
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: !quart3,
-                  child: Align(
-                    alignment: Alignment(1, -1),
-                    child: Container(
-                      width: _halfSize,
-                      height: _halfSize,
+        Container(
+          width: _size + 2,
+          height: _size + 2,
+          child: PhysicalModel(
+            elevation: 2,
+            shadowColor: Colors.black,
+            clipBehavior: Clip.antiAlias,
+            shape: BoxShape.circle,
+            color: Colors.black,
+            child: Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: PhysicalModel(
+                clipBehavior: Clip.antiAlias,
+                shape: BoxShape.circle,
+                color: Colors.black,
+                child: Stack(
+                  children: [
+                    Container(
+                      width: _size,
+                      height: _size,
                       color: Colors.black,
                     ),
-                  ),
+                    Visibility(
+                      visible: quart1,
+                      child: Align(
+                        alignment: Alignment(1, -1),
+                        child: Transform(
+                          transform: matrix1,
+                          origin: Offset(0, _halfSize),
+                          child: Container(
+                            width: _halfSize,
+                            height: _halfSize,
+                            color: color,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: quart2,
+                      child: Align(
+                        alignment: Alignment(1, 1),
+                        child: Transform(
+                          transform: matrix2,
+                          origin: Offset(0, 0),
+                          child: Container(
+                            width: _halfSize,
+                            height: _halfSize,
+                            color: color,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: quart3,
+                      child: Align(
+                        alignment: Alignment(-1, 1),
+                        child: Transform(
+                          transform: matrix3,
+                          origin: Offset(_halfSize, 0),
+                          child: Container(
+                            width: _halfSize,
+                            height: _halfSize,
+                            color: color,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: quart4,
+                      child: Align(
+                        alignment: Alignment(-1, -1),
+                        child: Transform(
+                          transform: matrix4,
+                          origin: Offset(_halfSize, _halfSize),
+                          child: Container(
+                            width: _halfSize,
+                            height: _halfSize,
+                            color: color,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: !quart3,
+                      child: Align(
+                        alignment: Alignment(1, -1),
+                        child: Container(
+                          width: _halfSize,
+                          height: _halfSize,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      width: _size * .87,
+                      height: _size * .87,
+                      child: Container(
+                        transform: Matrix4.skewX(.02),
+                        child: ClipOval(
+                          child: ColorFiltered(
+                            colorFilter: ColorFilter.mode(
+                              Colors.white.withOpacity(0.1),
+                              BlendMode.multiply,
+                            ),
+                            child: Container(
+                              color: Colors.white.withOpacity(0.1),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

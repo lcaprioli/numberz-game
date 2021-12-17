@@ -12,9 +12,9 @@ class BoardConsts {
   static const mobileGridPadding = 7.0;
 
   final levelScale = 5;
-  final timeGap = 30;
+  final timeGap = 10;
   final gameTime = 60;
-  final bonusGap = 5;
+  final bonusGap = 12;
 
   final sequenceBonus = 4;
   final matchScore = 10;
