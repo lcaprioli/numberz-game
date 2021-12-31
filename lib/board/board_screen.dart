@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
+//import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:numbers/board/widgets/sound_button.dart';
 import 'package:numbers/board/widgets/tile.dart';
@@ -35,24 +35,18 @@ class _BoardScreenState extends State<BoardScreen> {
 
   late Timer _timer;
 
-  late AudioCache audioCache;
-  AudioPlayer? musicPlayer;
+  //late AudioCache audioCache;
+  //AudioPlayer? musicPlayer;
 
   bool _clockAlarm = false;
 
   @override
   void initState() {
-    audioCache = AudioCache(prefix: "assets/audio/");
-
-    int _width =
-        widget.isMobile ? BoardConsts.mobileWidth : BoardConsts.desktopWidth;
-
-    int _height =
-        widget.isMobile ? BoardConsts.mobileHeight : BoardConsts.desktopHeight;
+    //audioCache = AudioCache(prefix: "assets/audio/");
     controller = BoardController(
-      _width,
-      _height,
-      audioCache: audioCache,
+      BoardConsts.width,
+      BoardConsts.height,
+      //audioCache: audioCache,
     );
     controller.setInitial();
 
@@ -95,7 +89,7 @@ class _BoardScreenState extends State<BoardScreen> {
               children: [
                 Flexible(
                   flex: 8,
-                  //fit: FlexFit.tight,
+                  fit: FlexFit.tight,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -124,8 +118,11 @@ class _BoardScreenState extends State<BoardScreen> {
                                             controller.columns.length,
                                             (columnIndex) {
                                           return Container(
-                                            height: _columnHeight(),
-                                            width: _columnWidth(),
+                                            height:
+                                                MediaQueryUtils.columnHeight(
+                                                    context),
+                                            width: MediaQueryUtils.columnWidth(
+                                                context),
                                             child: Stack(
                                               children: List.generate(
                                                 controller.columns[columnIndex]
@@ -229,7 +226,7 @@ class _BoardScreenState extends State<BoardScreen> {
                 padding: const EdgeInsets.all(18.0),
                 child: SoundButton(
                   onTap: () async {
-                    if (musicPlayer == null) {
+                    /*             if (musicPlayer == null) {
                       musicPlayer = await audioCache.loop("music.mp3");
 
                       setState(() {
@@ -250,6 +247,7 @@ class _BoardScreenState extends State<BoardScreen> {
                         });
                       }
                     }
+         */
                   },
                   isMuted: controller.isMuted,
                 ),
@@ -259,25 +257,5 @@ class _BoardScreenState extends State<BoardScreen> {
         ),
       ),
     );
-  }
-
-  double _columnHeight() {
-    return ((widget.isMobile
-                ? BoardConsts.mobileTileSize
-                : MediaQueryUtils.desktopTileSize(context)) *
-            controller.height) +
-        ((controller.height) *
-            (widget.isMobile
-                ? BoardConsts.mobileGridPadding
-                : BoardConsts.desktopGridPadding));
-  }
-
-  double _columnWidth() {
-    return (widget.isMobile
-            ? BoardConsts.mobileTileSize
-            : MediaQueryUtils.desktopTileSize(context)) +
-        (widget.isMobile
-            ? BoardConsts.mobileGridPadding
-            : BoardConsts.desktopGridPadding);
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:audioplayers/audioplayers.dart';
+//import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -13,13 +13,15 @@ typedef StateFunction = void Function(List<Point> points);
 class BoardController {
   BoardController(
     this.width,
-    this.height, {
-    required this.audioCache,
-  });
+    this.height,
+//    {
+//    required this.audioCache,
+    //}
+  );
 
   final int width;
   final int height;
-  final AudioCache? audioCache;
+  // final AudioCache? audioCache;
 
   final burnTime = ValueNotifier<int>(BoardConsts().timeGap);
   final totalTime = ValueNotifier<int>(BoardConsts().gameTime);
@@ -27,8 +29,8 @@ class BoardController {
 
   int bonusTime = 0;
 
-  AudioPlayer? fryPlayer;
-  AudioPlayer? blopPlayer;
+  //AudioPlayer? fryPlayer;
+  //AudioPlayer? blopPlayer;
 
   List<Set<int>> selectedTiles = [];
   List<Set<int>> expiringTiles = [];
@@ -141,7 +143,7 @@ class BoardController {
         columns[i].value = List.from(columns[i].value);
       }
     }
-    if (!isMuted) fryPlayer = await audioCache?.play('fry.mp3');
+    //if (!isMuted) fryPlayer = await audioCache?.play('fry.mp3');
     await Future.delayed(Duration(seconds: 1));
 
     for (var i = 0; i < width; i++) {
@@ -228,7 +230,7 @@ class BoardController {
 
       if (match || sequenceCount == selectedPoints.length - 1) {
         removeSelected(selectedTiles);
-        if (!isMuted) blopPlayer = await audioCache?.play('blop.mp3');
+        //  if (!isMuted) blopPlayer = await audioCache?.play('blop.mp3');
       }
 
       if (match) {

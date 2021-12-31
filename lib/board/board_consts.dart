@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
 class BoardConsts {
-  static const mobileWidth = 4;
-  static const mobileHeight = 5;
-  static const desktopWidth = 5;
-  static const desktopHeight = 5;
+  static const width = 5;
+  static const height = 5;
 
   static const desktopTileSize = 70.0;
-  static const mobileTileSize = 65.0;
+  static const mobileTileSize = 55.0;
   static const desktopGridPadding = 10.0;
   static const mobileGridPadding = 7.0;
 

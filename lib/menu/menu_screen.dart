@@ -4,6 +4,7 @@ import 'package:numbers/board/board_screen.dart';
 import 'package:numbers/shared/templates/colors.dart';
 import 'package:numbers/shared/templates/main_body.dart';
 import 'package:numbers/shared/utils/media_query.dart';
+import 'package:numbers/tutorial/tutorial_screen.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -25,9 +26,12 @@ class _MenuScreenState extends State<MenuScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Flexible(
-                      fit: FlexFit.tight,
-                      child: SizedBox(),
+                    Visibility(
+                      visible: !MediaQueryUtils.isMobile(context),
+                      child: Flexible(
+                        fit: FlexFit.tight,
+                        child: SizedBox(),
+                      ),
                     ),
                     Flexible(
                       fit: FlexFit.tight,
@@ -73,9 +77,12 @@ class _MenuScreenState extends State<MenuScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Flexible(
-                            fit: FlexFit.tight,
-                            child: SizedBox(),
+                          Visibility(
+                            visible: !MediaQueryUtils.isMobile(context),
+                            child: Flexible(
+                              fit: FlexFit.tight,
+                              child: SizedBox(),
+                            ),
                           ),
                           Flexible(
                             fit: FlexFit.tight,
@@ -119,16 +126,30 @@ class _MenuScreenState extends State<MenuScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Flexible(
-                            fit: FlexFit.tight,
-                            child: SizedBox(),
+                          Visibility(
+                            visible: !MediaQueryUtils.isMobile(context),
+                            child: Flexible(
+                              fit: FlexFit.tight,
+                              child: SizedBox(),
+                            ),
                           ),
                           Flexible(
                             fit: FlexFit.tight,
                             child: Padding(
                               padding: const EdgeInsets.all(18.0),
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.of(context).push<void>(
+                                    MaterialPageRoute<void>(
+                                      builder: (BuildContext context) =>
+                                          TutorialScreen(
+                                        title: 'Flutter Demo Home Page',
+                                        isMobile:
+                                            MediaQueryUtils.isMobile(context),
+                                      ),
+                                    ),
+                                  );
+                                },
                                 child: Text(
                                   'Info',
                                   textAlign: TextAlign.center,

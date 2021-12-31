@@ -29,21 +29,11 @@ class _TileState extends State<Tile> {
       curve: Curves.easeInOutCubicEmphasized,
       duration: const Duration(milliseconds: 1200),
       key: widget.tile.customKey,
-      bottom: (widget.index *
-              (widget.isMobile
-                  ? BoardConsts.mobileTileSize
-                  : MediaQueryUtils.desktopTileSize(context))) +
-          widget.index *
-              (widget.isMobile
-                  ? BoardConsts.mobileGridPadding
-                  : BoardConsts.desktopGridPadding),
+      bottom: (widget.index * MediaQueryUtils.tileSize(context)) +
+          widget.index * MediaQueryUtils.paddingSize(context),
       child: SizedBox(
-        height: (widget.isMobile
-            ? BoardConsts.mobileTileSize
-            : MediaQueryUtils.desktopTileSize(context)),
-        width: (widget.isMobile
-            ? BoardConsts.mobileTileSize
-            : MediaQueryUtils.desktopTileSize(context)),
+        height: MediaQueryUtils.tileSize(context),
+        width: MediaQueryUtils.tileSize(context),
         child: ClipOval(
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
@@ -62,19 +52,10 @@ class _TileState extends State<Tile> {
                 Visibility(
                   visible: !widget.tile.burned,
                   child: Positioned(
-                    top: -(widget.isMobile
-                            ? BoardConsts.mobileTileSize
-                            : MediaQueryUtils.desktopTileSize(context)) /
-                        12,
+                    top: -MediaQueryUtils.tileSize(context) / 12,
                     right: 0,
-                    width: (widget.isMobile
-                            ? BoardConsts.mobileTileSize
-                            : MediaQueryUtils.desktopTileSize(context)) *
-                        .87,
-                    height: (widget.isMobile
-                            ? BoardConsts.mobileTileSize
-                            : MediaQueryUtils.desktopTileSize(context)) *
-                        .87,
+                    width: MediaQueryUtils.tileSize(context) * .87,
+                    height: MediaQueryUtils.tileSize(context) * .87,
                     child: Container(
                       transform: Matrix4.skewX(.02),
                       child: ClipOval(
@@ -104,7 +85,7 @@ class _TileState extends State<Tile> {
                                 : BoardConsts.fontColors
                                     .elementAt(widget.tile.number - 1),
                             fontWeight: FontWeight.bold,
-                            fontSize: 36.0,
+                            fontSize: 26.0,
                           ),
                         ),
                       ),
