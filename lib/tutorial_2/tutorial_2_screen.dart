@@ -4,13 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/board/board_consts.dart';
 import 'package:numbers/board/models/tutorial_tile_model.dart';
 import 'package:numbers/board/widgets/tutorial_tile.dart';
+import 'package:numbers/menu/menu_screen.dart';
 import 'package:numbers/shared/templates/tutorial_body.dart';
 import 'package:numbers/shared/utils/media_query.dart';
 import 'package:numbers/tutorial_1/tutorial_1_controller.dart';
-import 'package:numbers/tutorial_2/tutorial_2_screen.dart';
 
-class Tutorial1Screen extends StatefulWidget {
-  Tutorial1Screen({
+class Tutorial2Screen extends StatefulWidget {
+  Tutorial2Screen({
     Key? key,
     required this.title,
     required this.isMobile,
@@ -20,10 +20,10 @@ class Tutorial1Screen extends StatefulWidget {
   final bool isMobile;
 
   @override
-  _Tutorial1ScreenState createState() => _Tutorial1ScreenState();
+  _Tutorial2ScreenState createState() => _Tutorial2ScreenState();
 }
 
-class _Tutorial1ScreenState extends State<Tutorial1Screen> {
+class _Tutorial2ScreenState extends State<Tutorial2Screen> {
   late Tutorial1Controller controller;
 
   @override
@@ -53,7 +53,12 @@ class _Tutorial1ScreenState extends State<Tutorial1Screen> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: IconButton(
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => MenuScreen()),
+                              (Route<dynamic> route) => false);
+                        },
                         icon: Icon(Icons.chevron_left),
                         iconSize: 40,
                         color: Colors.white,
@@ -150,8 +155,15 @@ class _Tutorial1ScreenState extends State<Tutorial1Screen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 30.0, vertical: 10.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        IconButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          icon: Icon(Icons.chevron_left),
+                          iconSize: 40,
+                          color: Colors.white,
+                          padding: EdgeInsets.zero,
+                        ),
                         IconButton(
                           onPressed: () {
                             Navigator.of(context).push<void>(
