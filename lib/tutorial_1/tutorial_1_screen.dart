@@ -2,6 +2,7 @@ import 'dart:async';
 
 //import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/board/board_consts.dart';
 import 'package:numbers/board/models/tile_model.dart';
 import 'package:numbers/board/widgets/sound_button.dart';
@@ -11,10 +12,10 @@ import 'package:numbers/main.dart';
 import 'package:numbers/shared/templates/main_body.dart';
 import 'package:numbers/shared/templates/tutorial_body.dart';
 import 'package:numbers/shared/utils/media_query.dart';
-import 'package:numbers/tutorial/tutorial_controller.dart';
+import 'package:numbers/tutorial_1/tutorial_1_controller.dart';
 
-class TutorialScreen extends StatefulWidget {
-  TutorialScreen({
+class Tutorial1Screen extends StatefulWidget {
+  Tutorial1Screen({
     Key? key,
     required this.title,
     required this.isMobile,
@@ -24,15 +25,15 @@ class TutorialScreen extends StatefulWidget {
   final bool isMobile;
 
   @override
-  _TutorialScreenState createState() => _TutorialScreenState();
+  _Tutorial1ScreenState createState() => _Tutorial1ScreenState();
 }
 
-class _TutorialScreenState extends State<TutorialScreen> {
-  late TutorialController controller;
+class _Tutorial1ScreenState extends State<Tutorial1Screen> {
+  late Tutorial1Controller controller;
 
   @override
   void initState() {
-    controller = TutorialController(
+    controller = Tutorial1Controller(
       BoardConsts.width,
       BoardConsts.height,
       //     audioCache: audioCache,
@@ -52,19 +53,41 @@ class _TutorialScreenState extends State<TutorialScreen> {
               direction: widget.isMobile ? Axis.vertical : Axis.horizontal,
               children: [
                 Flexible(
-                  flex: 8,
-                  fit: FlexFit.tight,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Icon(Icons.chevron_left),
+                        iconSize: 40,
+                        color: Colors.white,
+                        padding: EdgeInsets.zero,
+                      ),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 6,
+                  fit: MediaQueryUtils.isMobile(context)
+                      ? FlexFit.loose
+                      : FlexFit.tight,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(30.0),
+                        padding: EdgeInsets.all(
+                            MediaQueryUtils.isMobile(context) ? 20.0 : 30.0),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(25),
                           ),
-                          padding: EdgeInsets.all(15),
+                          padding: EdgeInsets.all(
+                              (MediaQueryUtils.isMobile(context)
+                                      ? BoardConsts.mobileGridPadding
+                                      : BoardConsts.desktopGridPadding) *
+                                  2),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: List.generate(controller.columns.length,
@@ -109,10 +132,40 @@ class _TutorialScreenState extends State<TutorialScreen> {
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [],
+                      children: [
+                        Text(
+                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sapien ante, dictum sit amet sagittis nec, sollicitudin eget nisi. Nunc euismod lectus nec aliquet scelerisque. Pellentesque blandit dapibus aliquam.',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.gfsNeohellenic(
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              height:
+                                  MediaQueryUtils.isMobile(context) ? .8 : 1,
+                              fontSize:
+                                  MediaQueryUtils.isMobile(context) ? 27 : 32,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                )
+                ),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Icon(Icons.chevron_right),
+                        iconSize: 40,
+                        color: Colors.white,
+                        padding: EdgeInsets.zero,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ],

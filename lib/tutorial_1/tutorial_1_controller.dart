@@ -8,8 +8,8 @@ import 'package:numbers/board/models/tile_model.dart';
 
 typedef StateFunction = void Function(List<Point> points);
 
-class TutorialController {
-  TutorialController(
+class Tutorial1Controller {
+  Tutorial1Controller(
     this.width,
     this.height,
   );

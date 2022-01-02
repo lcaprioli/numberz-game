@@ -4,7 +4,7 @@ import 'package:numbers/board/board_screen.dart';
 import 'package:numbers/shared/templates/colors.dart';
 import 'package:numbers/shared/templates/main_body.dart';
 import 'package:numbers/shared/utils/media_query.dart';
-import 'package:numbers/tutorial/tutorial_screen.dart';
+import 'package:numbers/tutorial_1/tutorial_1_screen.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -142,7 +142,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                   Navigator.of(context).push<void>(
                                     MaterialPageRoute<void>(
                                       builder: (BuildContext context) =>
-                                          TutorialScreen(
+                                          Tutorial1Screen(
                                         title: 'Flutter Demo Home Page',
                                         isMobile:
                                             MediaQueryUtils.isMobile(context),
