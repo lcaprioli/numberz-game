@@ -87,20 +87,40 @@ class _BoardScreenState extends State<BoardScreen> {
             Flex(
               direction: widget.isMobile ? Axis.vertical : Axis.horizontal,
               children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: Icon(Icons.chevron_left),
+                      iconSize: 40,
+                      color: Colors.white,
+                      padding: EdgeInsets.zero,
+                    ),
+                  ),
+                ),
                 Flexible(
                   flex: 8,
-                  fit: FlexFit.tight,
+                  fit: MediaQueryUtils.isMobile(context)
+                      ? FlexFit.loose
+                      : FlexFit.tight,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(30.0),
+                        padding: EdgeInsets.all(
+                            MediaQueryUtils.isMobile(context) ? 10.0 : 30.0),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(25),
                           ),
-                          padding: EdgeInsets.all(15),
+                          padding: EdgeInsets.all(
+                              (MediaQueryUtils.isMobile(context)
+                                      ? BoardConsts.mobileGridPadding
+                                      : BoardConsts.desktopGridPadding) *
+                                  2),
                           child: ValueListenableBuilder<bool>(
                               valueListenable: controller.disabled,
                               builder: (_, disable, __) {

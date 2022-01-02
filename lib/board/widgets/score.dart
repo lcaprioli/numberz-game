@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:numbers/shared/utils/media_query.dart';
 
 class Score extends StatelessWidget {
   const Score(
@@ -27,7 +28,7 @@ class Score extends StatelessWidget {
                   textStyle: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 32.0,
+                    fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32,
                   ),
                 ),
               ),
@@ -40,7 +41,7 @@ class Score extends StatelessWidget {
                   textStyle: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 32.0,
+                    fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32,
                   ),
                 ),
               ),

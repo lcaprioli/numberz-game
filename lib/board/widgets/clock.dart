@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:numbers/shared/utils/media_query.dart';
 
 class Clock extends StatelessWidget {
   const Clock({
@@ -167,7 +168,7 @@ class Clock extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 30,
+          height: MediaQueryUtils.isMobile(context) ? 5 : 30,
         ),
         Text(
           '$title',
@@ -175,7 +176,7 @@ class Clock extends StatelessWidget {
             textStyle: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 32.0,
+              fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32.0,
             ),
           ),
         ),
@@ -185,7 +186,7 @@ class Clock extends StatelessWidget {
             textStyle: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 32.0,
+              fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32.0,
             ),
           ),
         ),

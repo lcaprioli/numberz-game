@@ -5,9 +5,9 @@ class BoardConsts {
   static const height = 5;
 
   static const desktopTileSize = 70.0;
-  static const mobileTileSize = 55.0;
+  static const mobileTileSize = 50.0;
   static const desktopGridPadding = 10.0;
-  static const mobileGridPadding = 7.0;
+  static const mobileGridPadding = 5.0;
 
   final levelScale = 5;
   final timeGap = 10;
