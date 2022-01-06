@@ -40,22 +40,27 @@ class Tutorial1Controller {
 
     columns[0].value = List.from([
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 2,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 5,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 5,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 4,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 1,
       ),
@@ -64,22 +69,27 @@ class Tutorial1Controller {
 
     columns[1].value = List.from([
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 5,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 2,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 2,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 2,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 1,
       ),
@@ -88,22 +98,27 @@ class Tutorial1Controller {
 
     columns[2].value = List.from([
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 5,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 2,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 1,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 1,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 4,
       ),
@@ -112,22 +127,27 @@ class Tutorial1Controller {
 
     columns[3].value = List.from([
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 2,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 5,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 3,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 5,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 5,
       ),
@@ -136,22 +156,27 @@ class Tutorial1Controller {
 
     columns[4].value = List.from([
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 3,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 4,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 2,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 5,
       ),
       TutorialTileModel(
+        opaque: true,
         customKey: GlobalKey(),
         number: 2,
       ),

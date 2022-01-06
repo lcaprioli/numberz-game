@@ -17,7 +17,7 @@ class MainBody extends StatelessWidget {
             children: [
               Image.asset(
                 'assets/images/bg.jpg',
-                fit: BoxFit.fitHeight,
+                fit: BoxFit.fill,
               ),
               Column(
                 children: [

@@ -7,10 +7,12 @@ class TutorialTileModel {
     this.hasHit = false,
     this.disposed = false,
     this.burned = false,
+    this.opaque = false,
   });
 
   final GlobalKey customKey;
   final int number;
+  final bool opaque;
   bool hasHit;
   bool disposed;
   bool burned;

@@ -1,13 +1,14 @@
 //import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/board/board_consts.dart';
 import 'package:numbers/board/models/tutorial_tile_model.dart';
 import 'package:numbers/board/widgets/tutorial_tile.dart';
 import 'package:numbers/menu/menu_screen.dart';
 import 'package:numbers/shared/templates/tutorial_body.dart';
+import 'package:numbers/shared/templates/tutorial_text.dart';
 import 'package:numbers/shared/utils/media_query.dart';
-import 'package:numbers/tutorial_1/tutorial_1_controller.dart';
+
+import 'tutorial_2_controller.dart';
 
 class Tutorial2Screen extends StatefulWidget {
   Tutorial2Screen({
@@ -24,17 +25,17 @@ class Tutorial2Screen extends StatefulWidget {
 }
 
 class _Tutorial2ScreenState extends State<Tutorial2Screen> {
-  late Tutorial1Controller controller;
+  late Tutorial2Controller controller;
 
   @override
   void initState() {
-    controller = Tutorial1Controller(
+    controller = Tutorial2Controller(
       BoardConsts.width,
       BoardConsts.height,
       //     audioCache: audioCache,
     );
-    controller.setInitial();
 
+    controller.setInitial();
     super.initState();
   }
 
@@ -132,19 +133,8 @@ class _Tutorial2ScreenState extends State<Tutorial2Screen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sapien ante, dictum sit amet sagittis nec, sollicitudin eget nisi. Nunc euismod lectus nec aliquet scelerisque. Pellentesque blandit dapibus aliquam.',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.gfsNeohellenic(
-                            textStyle: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              height:
-                                  MediaQueryUtils.isMobile(context) ? .8 : 1,
-                              fontSize:
-                                  MediaQueryUtils.isMobile(context) ? 27 : 32,
-                            ),
-                          ),
+                        TutorialText(
+                          '222222222222 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sapien ante, dictum sit amet sagittis nec, sollicitudin eget nisi. Nunc euismod.',
                         ),
                       ],
                     ),
