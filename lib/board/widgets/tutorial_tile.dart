@@ -9,12 +9,10 @@ class TutorialTile extends StatefulWidget {
   TutorialTile({
     required this.tile,
     required this.index,
-    required this.isMobile,
   });
 
   final TutorialTileModel tile;
   final int index;
-  final bool isMobile;
 
   @override
   _TutorialTileState createState() => _TutorialTileState();
@@ -23,16 +21,11 @@ class TutorialTile extends StatefulWidget {
 class _TutorialTileState extends State<TutorialTile> {
   @override
   Widget build(BuildContext context) {
-    return AnimatedPositioned(
-      curve: Curves.easeInOutCubicEmphasized,
-      duration: const Duration(milliseconds: 1200),
-      key: widget.tile.customKey,
+    return Positioned(
       bottom: (widget.index * MediaQueryUtils.tileSize(context)) +
           widget.index * MediaQueryUtils.paddingSize(context),
-      child: AnimatedOpacity(
+      child: Opacity(
         opacity: widget.tile.opaque ? 1 : .20,
-        curve: Curves.easeInOutCubicEmphasized,
-        duration: const Duration(milliseconds: 1200),
         child: SizedBox(
           height: MediaQueryUtils.tileSize(context),
           width: MediaQueryUtils.tileSize(context),
