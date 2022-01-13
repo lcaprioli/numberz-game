@@ -29,7 +29,7 @@ class ChiefDecoration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width / 4,
+      width: MediaQuery.of(context).size.height / 2,
       child: Image.asset(
         'assets/images/greek.png',
         fit: BoxFit.contain,
