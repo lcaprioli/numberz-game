@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/board/board_consts.dart';
 import 'package:numbers/board/widgets/decoration.dart';
 import 'package:numbers/menu/menu_screen.dart';
+import 'package:numbers/shared/templates/colors.dart';
 import 'package:numbers/shared/utils/media_query.dart';
 import 'package:numbers/tutorial/tutorial_consts.dart';
 
@@ -97,7 +97,8 @@ class TutorialBody extends StatelessWidget {
                                       visible: pos > 0,
                                       child: InkWell(
                                         onTap: () {
-                                          Navigator.of(context).push<void>(
+                                          print(pos);
+                                          Navigator.of(context).pushReplacement(
                                             MaterialPageRoute<void>(
                                                 builder: (BuildContext
                                                         context) =>
@@ -106,7 +107,34 @@ class TutorialBody extends StatelessWidget {
                                                         pos - 1]),
                                           );
                                         },
-                                        child: BackSymbol(),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: BackSymbol(),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: TutorialConsts
+                                              .tutorialScreens.length *
+                                          40,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: List.generate(
+                                          TutorialConsts.tutorialScreens.length,
+                                          (index) => Container(
+                                            decoration: BoxDecoration(
+                                              color: pos == index
+                                                  ? Colors.white
+                                                  : TemplateColors
+                                                      .colorDarkBlue,
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                            width: 10,
+                                            height: 10,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     Visibility(
@@ -116,6 +144,7 @@ class TutorialBody extends StatelessWidget {
                                               1,
                                       child: InkWell(
                                         onTap: () {
+                                          print(pos);
                                           Navigator.of(context).pushReplacement(
                                             MaterialPageRoute<void>(
                                                 builder: (BuildContext
@@ -125,7 +154,10 @@ class TutorialBody extends StatelessWidget {
                                                         pos + 1]),
                                           );
                                         },
-                                        child: FowardSymbol(),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: FowardSymbol(),
+                                        ),
                                       ),
                                     ),
                                   ],
