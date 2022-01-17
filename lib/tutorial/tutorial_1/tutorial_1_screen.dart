@@ -19,7 +19,7 @@ class _Tutorial1ScreenState extends State<Tutorial1Screen> {
   @override
   Widget build(BuildContext context) {
     return TutorialBody(
-      pos: 0,
+      pos: 1,
       board: List.generate(Tutorial1Controller.columns.length, (columnIndex) {
         return Container(
           height: MediaQueryUtils.columnHeight(context),

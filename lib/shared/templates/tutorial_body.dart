@@ -14,12 +14,14 @@ class TutorialBody extends StatelessWidget {
   const TutorialBody({
     Key? key,
     required this.text,
-    required this.board,
     required this.pos,
+    this.board,
+    this.picture,
   }) : super(key: key);
 
   final Widget text;
-  final List<Widget> board;
+  final List<Widget>? board;
+  final Widget? picture;
   final int pos;
 
   @override
@@ -67,15 +69,22 @@ class TutorialBody extends StatelessWidget {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(25),
                                 ),
-                                padding: EdgeInsets.all(
+                                /*             padding: EdgeInsets.all(
                                   (MediaQueryUtils.isMobile(context)
                                       ? BoardConsts.mobileGridPadding
                                       : BoardConsts.desktopGridPadding),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: board,
-                                ),
+                                ), */
+                                child: board != null
+                                    ? Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 25.0, top: 15),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: board!,
+                                        ),
+                                      )
+                                    : picture,
                               ),
                             ),
                           ),
