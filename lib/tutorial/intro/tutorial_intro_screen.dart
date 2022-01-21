@@ -1,10 +1,8 @@
 //import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:numbers/board/widgets/tutorial_tile.dart';
 import 'package:numbers/shared/templates/tutorial_body.dart';
 import 'package:numbers/shared/templates/tutorial_text.dart';
 import 'package:numbers/shared/utils/media_query.dart';
-import 'package:numbers/tutorial/tutorial_1/tutorial_1_controller.dart';
 
 class TutorialIntroScreen extends StatefulWidget {
   const TutorialIntroScreen({
@@ -39,7 +37,7 @@ class _TutorialIntroScreenState extends State<TutorialIntroScreen> {
         ),
       ),
       text: TutorialText(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sapien ante, dictum sit amet sagittis nec, sollicitudin eget nisi. Nunc euismod lectus nec aliquet scelerisque. Pellentesque blandit dapibus aliquam.',
+        'Olá! eu sou o Yirgos e vou ensinar você a jogar LOUKOUMADES.',
       ),
     );
   }

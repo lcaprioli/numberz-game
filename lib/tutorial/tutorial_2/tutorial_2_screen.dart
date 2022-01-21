@@ -1,5 +1,8 @@
 //import 'package:audioplayers/audioplayers.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:numbers/board/models/tile_model.dart';
 import 'package:numbers/board/widgets/tutorial_tile.dart';
 import 'package:numbers/shared/templates/tutorial_body.dart';
 import 'package:numbers/shared/templates/tutorial_text.dart';
@@ -17,6 +20,29 @@ class Tutorial2Screen extends StatefulWidget {
 }
 
 class _Tutorial2ScreenState extends State<Tutorial2Screen> {
+  int actualIndex = 0;
+  final animation = [
+    Point(0, 4),
+    Point(1, 3),
+    Point(1, 2),
+    Point(2, 3),
+    Point(3, 4)
+  ];
+
+  @override
+  void initState() {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (actualIndex == animation.length - 1) {
+          actualIndex = 0;
+        } else {
+          actualIndex++;
+        }
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return TutorialBody(
@@ -32,13 +58,15 @@ class _Tutorial2ScreenState extends State<Tutorial2Screen> {
                 tile: Tutorial2Controller.columns[columnIndex].reversed
                     .toList()[index],
                 index: index,
+                hasPointer: animation[actualIndex].column == columnIndex &&
+                    animation[actualIndex].row == index,
               ),
             ),
           ),
         );
       }),
       text: TutorialText(
-        '222222222222 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sapien ante, dictum sit amet sagittis nec, sollicitudin eget nisi. Nunc euismod.',
+        'Sequências com números iguais valem 10 pontos para cada doce.',
       ),
     );
   }

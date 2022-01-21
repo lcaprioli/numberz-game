@@ -9,9 +9,11 @@ class TutorialTile extends StatefulWidget {
   TutorialTile({
     required this.tile,
     required this.index,
+    this.hasPointer = false,
   });
 
   final TutorialTileModel tile;
+  final bool hasPointer;
   final int index;
 
   @override
@@ -36,52 +38,40 @@ class _TutorialTileState extends State<TutorialTile> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: widget.tile.hasHit
-                          ? Colors.black
-                          : widget.tile.burned
-                              ? Colors.black
-                              : BoardConsts.tileColors
-                                  .elementAt(widget.tile.number - 1),
+                      color: BoardConsts.tileColors
+                          .elementAt(widget.tile.number - 1),
                     ),
                   ),
-                  Visibility(
-                    visible: !widget.tile.burned,
-                    child: Positioned(
-                      top: -MediaQueryUtils.tileSize(context) / 12,
-                      right: 0,
-                      width: MediaQueryUtils.tileSize(context) * .87,
-                      height: MediaQueryUtils.tileSize(context) * .87,
-                      child: Container(
-                        transform: Matrix4.skewX(.02),
-                        child: ClipOval(
-                          child: ColorFiltered(
-                            colorFilter: ColorFilter.mode(
-                              Colors.white.withOpacity(0.1),
-                              BlendMode.screen,
-                            ),
-                            child: Container(
-                              color: Colors.white.withOpacity(0.1),
-                            ),
+                  Positioned(
+                    top: -MediaQueryUtils.tileSize(context) / 12,
+                    right: 0,
+                    width: MediaQueryUtils.tileSize(context) * .87,
+                    height: MediaQueryUtils.tileSize(context) * .87,
+                    child: Container(
+                      transform: Matrix4.skewX(.02),
+                      child: ClipOval(
+                        child: ColorFiltered(
+                          colorFilter: ColorFilter.mode(
+                            Colors.white.withOpacity(0.1),
+                            BlendMode.screen,
+                          ),
+                          child: Container(
+                            color: Colors.white.withOpacity(0.1),
                           ),
                         ),
                       ),
                     ),
                   ),
                   Center(
-                    child: Visibility(
-                      visible: !widget.tile.disposed,
-                      child: FittedBox(
-                        child: Text(
-                          '${widget.tile.disposed ? '' : widget.tile.number}',
-                          style: GoogleFonts.gfsNeohellenic(
-                            textStyle: TextStyle(
-                              color: widget.tile.hasHit
-                                  ? Colors.amber
-                                  : BoardConsts.fontColors
-                                      .elementAt(widget.tile.number - 1),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 26.0,
-                            ),
+                    child: FittedBox(
+                      child: Text(
+                        '${widget.tile.number}',
+                        style: GoogleFonts.gfsNeohellenic(
+                          textStyle: TextStyle(
+                            color: BoardConsts.fontColors
+                                .elementAt(widget.tile.number - 1),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 26.0,
                           ),
                         ),
                       ),
@@ -93,6 +83,16 @@ class _TutorialTileState extends State<TutorialTile> {
                       border: Border.all(
                         color: Color(0xFF3a0d05),
                         width: 2,
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: widget.hasPointer,
+                    child: Center(
+                      child: Icon(
+                        Icons.touch_app,
+                        size: 55,
+                        color: Colors.white,
                       ),
                     ),
                   ),

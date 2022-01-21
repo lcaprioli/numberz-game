@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:numbers/board/board_consts.dart';
 import 'package:numbers/board/widgets/decoration.dart';
 import 'package:numbers/menu/menu_screen.dart';
 import 'package:numbers/shared/templates/colors.dart';

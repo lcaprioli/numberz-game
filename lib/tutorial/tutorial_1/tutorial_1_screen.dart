@@ -30,6 +30,7 @@ class _Tutorial1ScreenState extends State<Tutorial1Screen> {
               (index) => TutorialTile(
                 tile: Tutorial1Controller.columns[columnIndex].reversed
                     .toList()[index],
+                hasPointer: false,
                 index: index,
               ),
             ),
@@ -37,7 +38,7 @@ class _Tutorial1ScreenState extends State<Tutorial1Screen> {
         );
       }),
       text: TutorialText(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sapien ante, dictum sit amet sagittis nec, sollicitudin eget nisi. Nunc euismod lectus nec aliquet scelerisque. Pellentesque blandit dapibus aliquam.',
+        'LOUKOUMADE é um típico doce grego frito delicioso. Seu objetivo no game é fritar as melhores combinações.',
       ),
     );
   }
