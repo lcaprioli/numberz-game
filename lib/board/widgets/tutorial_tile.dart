@@ -4,6 +4,7 @@ import 'package:numbers/board/models/tutorial_tile_model.dart';
 import 'package:numbers/shared/utils/media_query.dart';
 
 import '../board_consts.dart';
+import 'tutorial_touch_icon.dart';
 
 class TutorialTile extends StatefulWidget {
   TutorialTile({
@@ -89,11 +90,7 @@ class _TutorialTileState extends State<TutorialTile> {
                   Visibility(
                     visible: widget.hasPointer,
                     child: Center(
-                      child: Icon(
-                        Icons.touch_app,
-                        size: 55,
-                        color: Colors.white,
-                      ),
+                      child: TutorialTouchIcon(),
                     ),
                   ),
                 ],

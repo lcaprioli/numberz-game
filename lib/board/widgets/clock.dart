@@ -6,13 +6,13 @@ class Clock extends StatelessWidget {
   const Clock({
     required this.counter,
     required this.amount,
-    required this.title,
     required this.color,
+    this.title,
   });
 
   final int counter;
   final int amount;
-  final String title;
+  final String? title;
   final Color color;
   @override
   Widget build(BuildContext context) {
@@ -170,26 +170,31 @@ class Clock extends StatelessWidget {
         SizedBox(
           height: MediaQueryUtils.isMobile(context) ? 5 : 30,
         ),
-        Text(
-          '$title',
-          style: GoogleFonts.gfsNeohellenic(
-            textStyle: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32.0,
-            ),
+        if (title != null)
+          Column(
+            children: [
+              Text(
+                '$title',
+                style: GoogleFonts.gfsNeohellenic(
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32.0,
+                  ),
+                ),
+              ),
+              Text(
+                '$counter',
+                style: GoogleFonts.gfsNeohellenic(
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32.0,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
-        Text(
-          '$counter',
-          style: GoogleFonts.gfsNeohellenic(
-            textStyle: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32.0,
-            ),
-          ),
-        ),
       ],
     );
   }

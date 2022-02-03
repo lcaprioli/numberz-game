@@ -7,6 +7,7 @@ import 'package:numbers/board/widgets/tile.dart';
 import 'package:numbers/game_over/game_over.dart';
 import 'package:numbers/main.dart';
 import 'package:numbers/menu/menu_screen.dart';
+import 'package:numbers/shared/templates/colors.dart';
 import 'package:numbers/shared/templates/main_body.dart';
 import 'package:numbers/shared/templates/previous_button.dart';
 import 'package:numbers/shared/utils/media_query.dart';
@@ -208,7 +209,7 @@ class _BoardScreenState extends State<BoardScreen> {
                                         counter: t,
                                         amount: BoardConsts().gameTime,
                                         title: 'Time left',
-                                        color: Colors.yellow.shade800,
+                                        color: TemplateColors.colorClockTotal,
                                       );
                                     }),
                                 ValueListenableBuilder<int>(
@@ -218,7 +219,7 @@ class _BoardScreenState extends State<BoardScreen> {
                                         counter: t,
                                         amount: BoardConsts().timeGap,
                                         title: 'Burn',
-                                        color: Color(0xffd75509),
+                                        color: TemplateColors.colorClockBurn    ,
                                       );
                                     }),
                               ],

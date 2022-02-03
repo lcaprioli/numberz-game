@@ -1,5 +1,8 @@
 //import 'package:audioplayers/audioplayers.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:numbers/board/models/tile_model.dart';
 import 'package:numbers/board/widgets/tutorial_tile.dart';
 import 'package:numbers/shared/templates/tutorial_body.dart';
 import 'package:numbers/shared/templates/tutorial_text.dart';
@@ -17,6 +20,29 @@ class Tutorial4Screen extends StatefulWidget {
 }
 
 class _Tutorial4ScreenState extends State<Tutorial4Screen> {
+  int actualIndex = 0;
+  final animation = [
+    Point(2, 2),
+    Point(2, 3),
+    Point(3, 2),
+    Point(4, 3),
+    Point(3, 3),
+  ];
+
+  @override
+  void initState() {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (actualIndex == animation.length - 1) {
+          actualIndex = 0;
+        } else {
+          actualIndex++;
+        }
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return TutorialBody(
@@ -32,13 +58,15 @@ class _Tutorial4ScreenState extends State<Tutorial4Screen> {
                 tile: Tutorial4Controller.columns[columnIndex].reversed
                     .toList()[index],
                 index: index,
+                hasPointer: animation[actualIndex].column == columnIndex &&
+                    animation[actualIndex].row == index,
               ),
             ),
           ),
         );
       }),
       text: TutorialText(
-        '222222222222 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sapien ante, dictum sit amet sagittis nec, sollicitudin eget nisi. Nunc euismod.',
+        'Agora, se você conseguir fazer uma sequência de 1/2/3/4/5 ganha 500 pontos!',
       ),
     );
   }

@@ -1,5 +1,8 @@
 //import 'package:audioplayers/audioplayers.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:numbers/board/models/tile_model.dart';
 import 'package:numbers/board/widgets/tutorial_tile.dart';
 import 'package:numbers/shared/templates/tutorial_body.dart';
 import 'package:numbers/shared/templates/tutorial_text.dart';
@@ -17,6 +20,26 @@ class Tutorial3Screen extends StatefulWidget {
 }
 
 class _Tutorial3ScreenState extends State<Tutorial3Screen> {
+  int actualIndex = 0;
+  final animation = [
+    Point(2, 2),
+    Point(2, 3),
+  ];
+
+  @override
+  void initState() {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (actualIndex == animation.length - 1) {
+          actualIndex = 0;
+        } else {
+          actualIndex++;
+        }
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return TutorialBody(
@@ -32,13 +55,15 @@ class _Tutorial3ScreenState extends State<Tutorial3Screen> {
                 tile: Tutorial3Controller.columns[columnIndex].reversed
                     .toList()[index],
                 index: index,
+                hasPointer: animation[actualIndex].column == columnIndex &&
+                    animation[actualIndex].row == index,
               ),
             ),
           ),
         );
       }),
       text: TutorialText(
-        '222222222222 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sapien ante, dictum sit amet sagittis nec, sollicitudin eget nisi. Nunc euismod.',
+        'Combinações em ordem crescente ou decrescente valem 30 pontos por doce.',
       ),
     );
   }

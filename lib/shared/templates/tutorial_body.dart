@@ -16,12 +16,14 @@ class TutorialBody extends StatelessWidget {
     required this.pos,
     this.board,
     this.picture,
+    this.info = const <Widget>[],
   }) : super(key: key);
 
   final Widget text;
   final List<Widget>? board;
   final Widget? picture;
   final int pos;
+  final List<Widget> info;
 
   @override
   Widget build(BuildContext context) {
@@ -60,31 +62,35 @@ class TutorialBody extends StatelessWidget {
                           ),
                           Flexible(
                             flex: MediaQueryUtils.isMobile(context) ? 11 : 4,
-                            child: Padding(
-                              padding: EdgeInsets.all(20),
-                              child: Container(
-                                constraints: BoxConstraints(maxWidth: 444),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(25),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(20),
+                                  child: Container(
+                                    constraints: BoxConstraints(maxWidth: 444),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(25),
+                                    ),
+                                    /*             padding: EdgeInsets.all(
+                                      (MediaQueryUtils.isMobile(context)
+                                          ? BoardConsts.mobileGridPadding
+                                          : BoardConsts.desktopGridPadding),
+                                    ), */
+                                    child: board != null
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 25.0, top: 15),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: board!,
+                                            ),
+                                          )
+                                        : picture,
+                                  ),
                                 ),
-                                /*             padding: EdgeInsets.all(
-                                  (MediaQueryUtils.isMobile(context)
-                                      ? BoardConsts.mobileGridPadding
-                                      : BoardConsts.desktopGridPadding),
-                                ), */
-                                child: board != null
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 25.0, top: 15),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: board!,
-                                        ),
-                                      )
-                                    : picture,
-                              ),
+                              ],
                             ),
                           ),
                           Flexible(
@@ -93,6 +99,12 @@ class TutorialBody extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
+                                if (info.isNotEmpty)
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: info,
+                                  ),
                                 text,
                                 SizedBox(
                                   height: 20,
