@@ -61,13 +61,18 @@ class TutorialBody extends StatelessWidget {
                             ),
                           ),
                           Flexible(
-                            flex: MediaQueryUtils.isMobile(context) ? 11 : 4,
+                            flex: MediaQueryUtils.isMobile(context) ? 11 : 3,
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Padding(
                                   padding: EdgeInsets.all(20),
                                   child: Container(
-                                    constraints: BoxConstraints(maxWidth: 444),
+                                    constraints: BoxConstraints(
+                                        maxWidth:
+                                            MediaQueryUtils.isMobile(context)
+                                                ? 270
+                                                : 444),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(25),
@@ -94,9 +99,9 @@ class TutorialBody extends StatelessWidget {
                             ),
                           ),
                           Flexible(
-                            flex: MediaQueryUtils.isMobile(context) ? 7 : 3,
+                            flex: MediaQueryUtils.isMobile(context) ? 7 : 4,
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 if (info.isNotEmpty)
@@ -107,7 +112,9 @@ class TutorialBody extends StatelessWidget {
                                   ),
                                 text,
                                 SizedBox(
-                                  height: 20,
+                                  height: MediaQueryUtils.isMobile(context)
+                                      ? null
+                                      : 20,
                                 ),
                                 Row(
                                   mainAxisAlignment:
@@ -185,7 +192,7 @@ class TutorialBody extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Flexible(child: SizedBox.shrink())
+                          /*   Flexible(child: SizedBox.shrink()) */
                         ],
                       ),
                     ),

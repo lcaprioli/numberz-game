@@ -7,112 +7,92 @@ class Tutorial6Controller {
     [
       TutorialTileModel(
         number: 2,
-        opaque: true,
       ),
       TutorialTileModel(
-        opaque: true,
         number: 5,
       ),
       TutorialTileModel(
-        opaque: true,
         number: 5,
       ),
       TutorialTileModel(
-        opaque: true,
         number: 4,
       ),
       TutorialTileModel(
-        opaque: true,
         number: 1,
       ),
     ],
     [
       TutorialTileModel(
-        opaque: true,
         number: 5,
       ),
       TutorialTileModel(
-        opaque: true,
         number: 2,
       ),
       TutorialTileModel(
-        opaque: true,
         number: 2,
       ),
       TutorialTileModel(
-        opaque: true,
         number: 2,
       ),
       TutorialTileModel(
-        opaque: true,
         number: 1,
       ),
     ],
     [
       TutorialTileModel(
-        opaque: true,
         number: 5,
       ),
       TutorialTileModel(
-        opaque: true,
         number: 2,
+        opaque: true,
       ),
       TutorialTileModel(
+        number: 1,
         opaque: true,
+      ),
+      TutorialTileModel(
         number: 1,
       ),
       TutorialTileModel(
-        opaque: true,
-        number: 1,
-      ),
-      TutorialTileModel(
-        opaque: true,
         number: 4,
       ),
     ],
     [
       TutorialTileModel(
-        opaque: true,
         number: 2,
       ),
       TutorialTileModel(
+        number: 5,
         opaque: true,
+      ),
+      TutorialTileModel(
+        number: 3,
+        opaque: true,
+      ),
+      TutorialTileModel(
         number: 5,
       ),
       TutorialTileModel(
-        opaque: true,
+        number: 5,
+      ),
+    ],
+    [
+      TutorialTileModel(
         number: 3,
       ),
       TutorialTileModel(
+        number: 4,
         opaque: true,
+      ),
+      TutorialTileModel(
+        number: 2,
+      ),
+      TutorialTileModel(
         number: 5,
       ),
       TutorialTileModel(
-        opaque: true,
-        number: 5,
+        number: 2,
       ),
     ],
-    [
-      TutorialTileModel(
-        opaque: true,
-        number: 3,
-      ),
-      TutorialTileModel(
-        opaque: true,
-        number: 4,
-      ),
-      TutorialTileModel(
-        opaque: true,
-        number: 2,
-      ),
-      TutorialTileModel(
-        opaque: true,
-        number: 5,
-      ),
-      TutorialTileModel(
-        opaque: true,
-        number: 2,
-      ),
-    ]
   ];
 }

@@ -20,6 +20,8 @@ class Tutorial4Screen extends StatefulWidget {
 }
 
 class _Tutorial4ScreenState extends State<Tutorial4Screen> {
+  late Timer? _timer;
+
   int actualIndex = 0;
   final animation = [
     Point(2, 2),
@@ -31,7 +33,7 @@ class _Tutorial4ScreenState extends State<Tutorial4Screen> {
 
   @override
   void initState() {
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         if (actualIndex == animation.length - 1) {
           actualIndex = 0;
@@ -41,6 +43,12 @@ class _Tutorial4ScreenState extends State<Tutorial4Screen> {
       });
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override

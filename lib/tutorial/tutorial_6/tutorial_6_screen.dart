@@ -1,6 +1,5 @@
 //import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:numbers/board/models/tile_model.dart';
@@ -23,6 +22,36 @@ class Tutorial6Screen extends StatefulWidget {
 }
 
 class _Tutorial6ScreenState extends State<Tutorial6Screen> {
+  late Timer? _timer;
+  int actualIndex = 0;
+  final animation = [
+    Point(2, 2),
+    Point(2, 3),
+    Point(3, 2),
+    Point(4, 3),
+    Point(3, 3),
+  ];
+
+  @override
+  void initState() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (actualIndex == animation.length - 1) {
+          actualIndex = 0;
+        } else {
+          actualIndex++;
+        }
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return TutorialBody(

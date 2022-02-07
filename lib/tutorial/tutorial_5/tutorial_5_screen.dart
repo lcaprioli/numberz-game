@@ -1,9 +1,6 @@
 //import 'package:audioplayers/audioplayers.dart';
-import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:numbers/board/models/tile_model.dart';
 import 'package:numbers/board/widgets/clock.dart';
 import 'package:numbers/board/widgets/tutorial_tile.dart';
 import 'package:numbers/shared/templates/colors.dart';

@@ -26,7 +26,7 @@ class _TutorialIntroScreenState extends State<TutorialIntroScreen> {
         ),
         child: SizedBox(
           width: MediaQueryUtils.isMobile(context)
-              ? null
+              ? 285
               : MediaQuery.of(context).size.height / 2,
           height: MediaQueryUtils.isMobile(context) ? 220 : null,
           child: Image.asset(

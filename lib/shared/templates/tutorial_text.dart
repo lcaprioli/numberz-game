@@ -12,18 +12,15 @@ class TutorialText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQueryUtils.isMobile(context) ? 150 : 350,
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: GoogleFonts.gfsNeohellenic(
-          textStyle: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            height: MediaQueryUtils.isMobile(context) ? .8 : 1,
-            fontSize: MediaQueryUtils.isMobile(context) ? 24 : 32,
-          ),
+    return Text(
+      text,
+      textAlign: TextAlign.center,
+      style: GoogleFonts.gfsNeohellenic(
+        textStyle: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          height: MediaQueryUtils.isMobile(context) ? .8 : 1,
+          fontSize: MediaQueryUtils.isMobile(context) ? 24 : 32,
         ),
       ),
     );
