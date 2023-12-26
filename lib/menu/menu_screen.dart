@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/board/board_screen.dart';
 import 'package:numbers/shared/templates/colors.dart';
 import 'package:numbers/shared/templates/main_body.dart';
@@ -43,12 +42,10 @@ class _MenuScreenState extends State<MenuScreen> {
                               child: Text(
                                 'LOUKUOMADES',
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.gfsNeohellenic(
-                                  textStyle: TextStyle(
-                                    color: TemplateColors.colorDarkBlue,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 74.0,
-                                  ),
+                                style: TextStyle(
+                                  color: TemplateColors.colorDarkBlue,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 74.0,
                                 ),
                               ),
                             ),
@@ -56,11 +53,9 @@ class _MenuScreenState extends State<MenuScreen> {
                               child: Text(
                                 'Λουκουμάδες',
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.gfsNeohellenic(
-                                  textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 68.0,
-                                  ),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 68.0,
                                 ),
                               ),
                             )
@@ -104,12 +99,10 @@ class _MenuScreenState extends State<MenuScreen> {
                                 child: Text(
                                   'Start',
                                   textAlign: TextAlign.center,
-                                  style: GoogleFonts.gfsNeohellenic(
-                                    textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 32.0,
-                                    ),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 32.0,
                                   ),
                                 ),
                               ),
@@ -149,12 +142,10 @@ class _MenuScreenState extends State<MenuScreen> {
                                 child: Text(
                                   'Info',
                                   textAlign: TextAlign.center,
-                                  style: GoogleFonts.gfsNeohellenic(
-                                    textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 32.0,
-                                    ),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 32.0,
                                   ),
                                 ),
                               ),

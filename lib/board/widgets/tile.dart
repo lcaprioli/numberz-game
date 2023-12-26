@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/board/models/tile_model.dart';
 import 'package:numbers/shared/utils/media_query.dart';
 
@@ -76,15 +75,13 @@ class _TileState extends State<Tile> {
                     child: FittedBox(
                       child: Text(
                         '${widget.tile.disposed ? '' : widget.tile.number}',
-                        style: GoogleFonts.gfsNeohellenic(
-                          textStyle: TextStyle(
-                            color: widget.tile.hasHit
-                                ? Colors.amber
-                                : BoardConsts.fontColors
-                                    .elementAt(widget.tile.number - 1),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 26.0,
-                          ),
+                        style: TextStyle(
+                          color: widget.tile.hasHit
+                              ? Colors.amber
+                              : BoardConsts.fontColors
+                                  .elementAt(widget.tile.number - 1),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 26.0,
                         ),
                       ),
                     ),

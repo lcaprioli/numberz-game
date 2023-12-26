@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/menu/menu_screen.dart';
 
 class Splash extends StatefulWidget {
@@ -56,12 +55,10 @@ class _SplashState extends State<Splash> {
             visible: false,
             child: Text(
               ' ',
-              style: GoogleFonts.gfsNeohellenic(
-                textStyle: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 32.0,
-                ),
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 32.0,
               ),
             ),
           ),

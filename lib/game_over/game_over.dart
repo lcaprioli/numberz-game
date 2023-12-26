@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/board/board_screen.dart';
 import 'package:numbers/shared/templates/colors.dart';
 import 'package:numbers/shared/templates/main_body.dart';
@@ -51,12 +50,10 @@ class _GameOverState extends State<GameOver> {
                               Text(
                                 'Game Over',
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.gfsNeohellenic(
-                                  textStyle: TextStyle(
-                                    color: TemplateColors.colorDarkBlue,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 48.0,
-                                  ),
+                                style: TextStyle(
+                                  color: TemplateColors.colorDarkBlue,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 48.0,
                                 ),
                               ),
                               SizedBox(
@@ -68,12 +65,10 @@ class _GameOverState extends State<GameOver> {
                                   Text(
                                     'Score:',
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.gfsNeohellenic(
-                                      textStyle: TextStyle(
-                                        color: TemplateColors.colorDarkBlue,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 32.0,
-                                      ),
+                                    style: TextStyle(
+                                      color: TemplateColors.colorDarkBlue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 32.0,
                                     ),
                                   ),
                                   SizedBox(
@@ -82,12 +77,10 @@ class _GameOverState extends State<GameOver> {
                                   Text(
                                     '${widget.score}',
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.gfsNeohellenic(
-                                      textStyle: TextStyle(
-                                        color: TemplateColors.colorLightBlue,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 32.0,
-                                      ),
+                                    style: TextStyle(
+                                      color: TemplateColors.colorLightBlue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 32.0,
                                     ),
                                   ),
                                 ],
@@ -101,12 +94,10 @@ class _GameOverState extends State<GameOver> {
                                   Text(
                                     'Best score:',
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.gfsNeohellenic(
-                                      textStyle: TextStyle(
-                                        color: TemplateColors.colorDarkBlue,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 32.0,
-                                      ),
+                                    style: TextStyle(
+                                      color: TemplateColors.colorDarkBlue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 32.0,
                                     ),
                                   ),
                                   SizedBox(
@@ -115,12 +106,10 @@ class _GameOverState extends State<GameOver> {
                                   Text(
                                     '${widget.bestScore}',
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.gfsNeohellenic(
-                                      textStyle: TextStyle(
-                                        color: TemplateColors.colorLightBlue,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 32.0,
-                                      ),
+                                    style: TextStyle(
+                                      color: TemplateColors.colorLightBlue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 32.0,
                                     ),
                                   ),
                                 ],
@@ -151,12 +140,10 @@ class _GameOverState extends State<GameOver> {
                                       child: Text(
                                         'Play again',
                                         textAlign: TextAlign.center,
-                                        style: GoogleFonts.gfsNeohellenic(
-                                          textStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 32.0,
-                                          ),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 32.0,
                                         ),
                                       ),
                                     ),

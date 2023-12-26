@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/shared/utils/media_query.dart';
 
 class Clock extends StatelessWidget {
@@ -175,22 +174,18 @@ class Clock extends StatelessWidget {
             children: [
               Text(
                 '$title',
-                style: GoogleFonts.gfsNeohellenic(
-                  textStyle: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32.0,
-                  ),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32.0,
                 ),
               ),
               Text(
                 '$counter',
-                style: GoogleFonts.gfsNeohellenic(
-                  textStyle: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32.0,
-                  ),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32.0,
                 ),
               ),
             ],

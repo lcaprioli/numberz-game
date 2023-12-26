@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/shared/utils/media_query.dart';
 
 class Score extends StatelessWidget {
@@ -24,12 +23,10 @@ class Score extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 'Score',
-                style: GoogleFonts.gfsNeohellenic(
-                  textStyle: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32,
-                  ),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32,
                 ),
               ),
             ),
@@ -37,12 +34,10 @@ class Score extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 '$score',
-                style: GoogleFonts.gfsNeohellenic(
-                  textStyle: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32,
-                  ),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32,
                 ),
               ),
             ),

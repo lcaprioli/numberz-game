@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:numbers/shared/utils/media_query.dart';
 
 import 'back_symbol.dart';
@@ -20,13 +19,11 @@ class PreviousButton extends StatelessWidget {
         FittedBox(
           child: Text(
             ' VOLTAR',
-            style: GoogleFonts.gfsNeohellenic(
-              textStyle: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                height: MediaQueryUtils.isMobile(context) ? .8 : 1,
-                fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32,
-              ),
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              height: MediaQueryUtils.isMobile(context) ? .8 : 1,
+              fontSize: MediaQueryUtils.isMobile(context) ? 27 : 32,
             ),
           ),
         ),
